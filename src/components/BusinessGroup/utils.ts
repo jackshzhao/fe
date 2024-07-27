@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import queryString from 'query-string';
+import i18next from 'i18next';
 
 interface TreeNode {
   id: number;
@@ -114,13 +115,15 @@ export function getDefaultBusiness(busiGroups) {
   let defaultBusinessGroupKey = getDefaultBusinessGroupKey();
   let ids = getCleanBusinessGroupIds(defaultBusinessGroupKey);
   let idsArr = _.map(_.compact(_.split(ids, ',')), _.toNumber);
-  const isValid = _.every(idsArr, (id) => {
-    if (!_.find(busiGroups, { id })) {
-      window.localStorage.removeItem('businessGroupKey');
-      return false;
-    }
-    return true;
-  });
+  const isValid = !_.isEmpty(idsArr)
+    ? _.every(idsArr, (id) => {
+        if (!_.find(busiGroups, { id })) {
+          window.localStorage.removeItem('businessGroupKey');
+          return false;
+        }
+        return true;
+      })
+    : false;
   // 缓存的节点信息无效时，取第一个节点
   if (!isValid) {
     defaultBusinessGroupKey = busiGroups?.[0]?.id;
@@ -138,3 +141,48 @@ export function getDefaultBusiness(busiGroups) {
   }
   return {};
 }
+
+/**
+ * 获取业务组可选项
+ * 1. 如果我的业务组和全部业务组一样，则只返回所有业务组
+ * 2. 如果我的业务组为空，则只返回所有业务组
+ * 3. 否则返回我的业务组和所有业务组，所有业务组排除我的业务组
+ * @param myBusiGroups
+ * @param allBusiGroups
+ */
+export const getBusinessGroupsOptions = (myBusiGroups, allBusiGroups) => {
+  if (_.isEqual(_.sortBy(myBusiGroups, 'id'), _.sortBy(allBusiGroups, 'id'))) {
+    return [
+      {
+        label: i18next.t('common:my_business_group'),
+        options: _.map(myBusiGroups, (item) => {
+          return { label: item.name, value: item.id };
+        }),
+      },
+    ];
+  }
+  if (_.isEmpty(myBusiGroups)) {
+    return [
+      {
+        label: i18next.t('common:all_business_group'),
+        options: _.map(allBusiGroups, (item) => {
+          return { label: item.name, value: item.id };
+        }),
+      },
+    ];
+  }
+  return [
+    {
+      label: i18next.t('common:my_business_group'),
+      options: _.map(myBusiGroups, (item) => {
+        return { label: item.name, value: item.id };
+      }),
+    },
+    {
+      label: i18next.t('common:all_business_group'),
+      options: _.map(_.differenceBy(allBusiGroups, myBusiGroups, 'id') as any, (item) => {
+        return { label: item.name, value: item.id };
+      }),
+    },
+  ];
+};

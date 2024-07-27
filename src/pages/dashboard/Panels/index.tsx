@@ -46,6 +46,8 @@ import Row from './Row';
 import EditorModal from './EditorModal';
 import { getDefaultThemeMode, ROW_HEIGHT } from '../Detail/utils';
 import { IDashboardConfig } from '../types';
+import { useGlobalState } from '../globalState';
+import ajustInitialValues from '../Renderer/utils/ajustInitialValues';
 import './style.less';
 
 interface IProps {
@@ -69,7 +71,7 @@ const ReactGridLayout = WidthProvider(RGL);
 
 function index(props: IProps) {
   const { t } = useTranslation('dashboard');
-  const { profile, darkMode, dashboardSaveMode, perms } = useContext(CommonStateContext);
+  const { profile, darkMode, dashboardSaveMode, perms, groupedDatasourceList } = useContext(CommonStateContext);
   const location = useLocation();
   let themeMode = darkMode ? 'dark' : 'light';
   if (IS_ENT) {
@@ -113,6 +115,7 @@ function index(props: IProps) {
     }
   };
   const editorRef = useRef<any>(null);
+  const [panelClipboard, setPanelClipboard] = useGlobalState('panelClipboard');
 
   useEffect(() => {
     setPanels(processRepeats(panels, variableConfig));
@@ -228,6 +231,9 @@ function index(props: IProps) {
                         },
                       });
                     }}
+                    onCopyClick={() => {
+                      setPanelClipboard(item);
+                    }}
                   />
                 ) : (
                   <div className='dashboards-panels-item-invalid'>
@@ -269,16 +275,7 @@ function index(props: IProps) {
                       mode: 'add',
                       visible: true,
                       id: item.id,
-                      initialValues: {
-                        type: 'timeseries',
-                        name: 'Panel Title',
-                        targets: [
-                          {
-                            refId: 'A',
-                            expr: '',
-                          },
-                        ],
-                      },
+                      initialValues: ajustInitialValues('timeseries', groupedDatasourceList, panels, variableConfig)?.initialValues,
                     });
                   }}
                   onEditClick={(newPanel) => {

@@ -25,7 +25,8 @@ const zh_HK = {
   default_filter: {
     title: '預置篩選',
     public: '公開儀表盤',
-    all: '全部儀表盤',
+    all: '所屬業務組儀錶板',
+    all_tip: '此選項會顯示您所在業務群組下關聯的所有儀表板',
   },
   create_title: '創建儀表盤',
   edit_title: '編輯儀表盤',
@@ -33,6 +34,7 @@ const zh_HK = {
   cluster: '叢集',
   full_screen: '全屏',
   exit_full_screen: '退出全屏',
+  copyPanelTip: '圖表已複製。點擊 "添加圖表" 進行貼上。',
   batch: {
     import: '匯入儀表盤',
     label: '儀表盤 JSON',
@@ -98,6 +100,10 @@ const zh_HK = {
       businessGroupIdent: '業務組標識',
     },
     hide: '隱藏變數',
+    hide_map: {
+      yes: '是',
+      no: '否',
+    },
     definition: '變數定義',
     definition_msg1: '請輸入變數定義',
     definition_msg2: '變數定義必須是合法的JSON',
@@ -183,6 +189,8 @@ const zh_HK = {
           showItem: '显示项目',
           hideItem: '隐藏项目',
         },
+        heightInPercentage: '高度百分比',
+        heightInPercentage_tip: 'Legend 高度佔據面板的最大高度百分比，最小值為 20%，最大值為 80%',
       },
       thresholds: {
         title: '閾值',
@@ -370,6 +378,10 @@ const zh_HK = {
             off: '關閉',
           },
         },
+        showPoints: '點顯示',
+        showPoints_always: '顯示',
+        showPoints_none: '不顯示',
+        pointSize: '點大小',
       },
       iframe: {
         src: 'iframe 地址',
@@ -415,6 +427,8 @@ const zh_HK = {
       },
     },
     expression_placeholder: '對一個或多個查詢進行數學運算。您透過 ${refId} 引用查詢，即 $A、$B、$C 等。兩個標量值的總和：$A + $B > 10',
+    legendTip: '圖例名稱的覆寫或模板，例如 {{hostname}} 將替換為 hostname 標籤的值',
+    legendTip2: '圖例名稱的覆寫或模板，例如 {{hostname}} 將替換為 hostname 標籤的值，目前只在時序資料下生效',
   },
   detail: {
     datasource_empty: '沒有數據源資訊，請先配置數據源',
@@ -435,6 +449,7 @@ const zh_HK = {
       discardText: '放棄',
       okText: '儲存',
     },
+    noPanelToPaste: '沒有可粘貼的圖表',
   },
   settings: {
     graphTooltip: {
@@ -464,6 +479,7 @@ const zh_HK = {
     heatmap: '色塊圖',
     iframe: '內嵌文檔(iframe)',
     row: '分組',
+    pastePanel: '粘貼圖表',
   },
   calcs: {
     lastNotNull: '最後一個非空值',

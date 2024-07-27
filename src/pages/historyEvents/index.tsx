@@ -30,6 +30,7 @@ import { getProdOptions } from '@/pages/alertRules/Form/components/ProdSelect';
 import DatasourceSelect from '@/components/DatasourceSelect/DatasourceSelect';
 import TimeRangePicker, { IRawTimeRange, parseRange, getDefaultValue } from '@/components/TimeRangePicker';
 import { IS_ENT } from '@/utils/constant';
+import { BusinessGroupSelectWithAll } from '@/components/BusinessGroup';
 import exportEvents, { downloadFile } from './exportEvents';
 import { getEvents, getEventsByIds } from './services';
 import { SeverityColor } from '../event';
@@ -127,8 +128,8 @@ const Event: React.FC = () => {
       },
     },
     {
-      title: t('last_eval_time'),
-      dataIndex: 'last_eval_time',
+      title: t('trigger_time'),
+      dataIndex: 'trigger_time',
       width: 120,
       render(value) {
         return moment((value ? value : 0) * 1000).format('YYYY-MM-DD HH:mm:ss');
@@ -216,25 +217,15 @@ const Event: React.FC = () => {
               });
             }}
           />
-          <Select
-            style={{ minWidth: 120 }}
-            placeholder={t('common:business_group')}
-            allowClear
+          <BusinessGroupSelectWithAll
             value={filter.bgid}
-            onChange={(val) => {
+            onChange={(val: number) => {
               setFilter({
                 ...filter,
                 bgid: val,
               });
             }}
-            dropdownMatchSelectWidth={false}
-            showSearch
-            optionFilterProp='children'
-          >
-            {_.map(busiGroups, (item) => {
-              return <Select.Option value={item.id}>{item.name}</Select.Option>;
-            })}
-          </Select>
+          />
           <Select
             style={{ minWidth: 60 }}
             placeholder={t('severity')}
