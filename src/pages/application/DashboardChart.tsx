@@ -1,8 +1,7 @@
-
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import ReactECharts from 'echarts-for-react';
 import * as echarts from 'echarts/core';
-import { LineChart } from 'echarts/charts';
+import { PieChart } from 'echarts/charts';
 import {
   TitleComponent,
   TooltipComponent,
@@ -16,19 +15,20 @@ echarts.use([
   TooltipComponent,
   GridComponent,
   LegendComponent,
-  LineChart,
+  PieChart,
   CanvasRenderer,
 ]);
 
 interface ChartProps {
   data: { 
     name: string; 
-    health: number; //纵坐标
+    health: number; // 纵坐标
   };
 }
 
 const Chart: React.FC<ChartProps> = ({ data }) => {
- 
+  const chartRef = useRef<ReactECharts>(null);
+
   const option = {
     // grid: {
     //     top: '20%', // 调整顶部间距，使得标题能够显示在图的正下方
@@ -79,8 +79,18 @@ const Chart: React.FC<ChartProps> = ({ data }) => {
         }
     ]  
   };
-      
-  return <ReactECharts option={option}  style={{ height: '100%', width: '100%' }}/>;
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (chartRef.current) {
+        chartRef.current.getEchartsInstance().resize();
+      }
+    }, 5000);
+
+    return () => clearTimeout(timeout);
+  }, [data]);
+
+  return <ReactECharts ref={chartRef} option={option} style={{ height: '100%', width: '100%' }} />;
 };
 
 export default Chart;

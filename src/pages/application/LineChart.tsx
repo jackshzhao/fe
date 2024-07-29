@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Line } from '@ant-design/charts';
 import 'antd/dist/antd.css'; // 引入 Ant Design 的样式
 
@@ -6,6 +6,9 @@ interface DataPoint {
   time: string;
   value: number;
 }
+
+//const [dataSource,setDatasource] = useState([]);
+
 
 export default function LineChart() {
   const data: DataPoint[] = [

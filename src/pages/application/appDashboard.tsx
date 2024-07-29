@@ -11,20 +11,29 @@ import AlertLineChart from './AlertLineChart'
 import Grid from './Grid';
 import 'antd/dist/antd.css'; 
 import './appDashboard.less'
+import { transform } from 'lodash';
+import { v4 as uuidv4 } from 'uuid';
 
 const { Sider, Content, Footer } = Layout;
 const appDashboard: React.FC = () => {
 
   interface application {
+    key: string;
+    name: string;
+    health: number; // 健康值，范围为0到100
+  }
+
+  interface application1 {
+ 
     name: string;
     health: number; // 健康值，范围为0到100
   }
 
   //院级应用健康列表数据
   const TabledataSource: application[] = [
-    { name: '系统A', health: 80 },
-    { name: '系统B', health: 58 },
-    { name: '系统C', health: 90 },
+    { key: uuidv4(),name: '系统A', health: 80 },
+    { key: uuidv4(),name: '系统B', health: 58 },
+    { key: uuidv4(),name: '系统C', health: 90 },
     
     // 添加更多系统数据
 ];
@@ -83,10 +92,10 @@ const tendencyData = {
   
 
   const [currentPage, setCurrentPage] = useState(0);
-  const chartsPerPage = 12;
+  const chartsPerPage = 9;
 
   //院级核心应用数据
-  const charts : application[] = [
+  const charts : application1[] = [
     { name: '系统A', health: 80 },
     { name: '系统B', health: 58 },
     { name: '系统C', health: 90 },
@@ -120,12 +129,14 @@ const tendencyData = {
   return (
   <PageLayout  title={"应用大屏"}>
     <div className="flex-col-container">
-      <div className="flex-col-item">
-        <div style={{position: 'relative',height: '50%', border: '1px solid #ccc',margin: '0px 10px 10px 0px' }}>
+      <div className="flex-col-item" >
+        <div style={{position: 'relative',  height: '50%',border: '1px solid #ccc',margin: '0px 10px 10px 0px' }}>
           <h4 style={{textAlign: 'center'}}>院级核心应用</h4>
-          <div style={{position: 'absolute', top: '10px',}}><Grid charts={visibleCharts} /></div>            
-          <Button style={{ position: 'absolute', bottom: '6px', right: '10px' }} onClick={handleClickPrev} size='small' disabled={currentPage === 0}>上一页</Button> 
-          <Button style={{ position: 'absolute', bottom: '6px', right: '75px' }} onClick={handleClickNext} size='small' disabled={startIndex + chartsPerPage >= charts.length}>下一页</Button>          
+          <div style={{height:'95%',width:'100%',position: 'absolute',top: '5%', left: '12%',}}>
+            <Grid charts={visibleCharts} /> 
+          </div>            
+          {/* <Button style={{ position: 'absolute', bottom: '6px', right: '10px' }} onClick={handleClickPrev} size='small' disabled={currentPage === 0}>上一页</Button> 
+          <Button style={{ position: 'absolute', bottom: '6px', right: '75px' }} onClick={handleClickNext} size='small' disabled={startIndex + chartsPerPage >= charts.length}>下一页</Button>           */}
         </div>
         <div style={{ height: '50%', border: '1px solid #ccc' ,margin: '0px 10px 0px 0px',}}>
           <h4 style={{textAlign: 'center'}}>监控告警趋势</h4>
@@ -138,6 +149,7 @@ const tendencyData = {
         <h4 style={{textAlign: 'center'}}>院级应用列表</h4>    
           
           <Table<application>
+            
             dataSource={TabledataSource}
             columns={columnList}
             pagination={false} // 可选分页
@@ -146,7 +158,7 @@ const tendencyData = {
           
         </div>
       </div>
-      <div className="flex-col-item">
+      <div className="flex-col-item" >
         <div style={{ height: '50%', border: '1px solid #ccc',margin: '0px 10px 10px 0px' }}>
           <h4 style={{textAlign: 'center'}}>应用可用性</h4>          
           <BarChart data={appapplicationchartData}/>  

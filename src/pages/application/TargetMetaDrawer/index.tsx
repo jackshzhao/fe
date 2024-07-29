@@ -25,10 +25,41 @@ const transMetaData = new Map([
   ['goV', 'go版本'],
   ['hostname', '主机名'],
   ['kernel_name', '系统内核'],
-  ['kernel_release', '内核版本'],
+  ['kernel_release', '内核发布版本'],
   ['machine', '处理器架构'],
   ['os', '操作系统'],
   ['pythonV', 'python版本'],
+  ['hardware_platform', '硬件平台'],
+  ['kernel_version', '内核版本'],
+  ['processor', '处理器'],
+
+  ['cache_size', '缓存大小'],
+  ['cpu_cores', 'cpu核心数'],
+  ['cpu_logical_processors', 'cpu逻辑核心数'],
+  ['family', 'cpu家族'],
+  ['mhz', '时钟频率'],
+  ['model', 'cpu型号'],
+  ['model_name', '型号名称'],
+  ['stepping', 'cpu修订版本'],
+  ['vendor_id', '供应商'],
+
+  ['swap_total', '交换空间大小'],
+  ['total', '内存大小'],
+
+  ['interfaces', '接口'],
+  ['ipaddress', 'ipv4'],
+  ['ipaddressv6', 'ipv6'],
+  ['macaddress', 'mac'],
+
+  ['cache_size', '缓存大小'],
+  ['cpu_cores', 'cpu核心数'],
+  ['cpu_logical_processors', 'cpu逻辑核心数'],
+  ['family', 'cpu家族'],
+  ['mhz', '时钟频率'],
+  ['model', 'cpu型号'],
+  ['model_name', '型号名称'],
+  ['stepping', 'cpu修订版本'],
+  ['vendor_id', '供应商'],
 ]);
 
 function bytesToSize(bytes, precision) {

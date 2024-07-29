@@ -398,6 +398,24 @@ export default function List(props: IProps) {
         },
       });
     }
+    //权重
+    
+    if (item.name === 'weight') {
+      columns.push({
+        title: (t('weight')),
+        width: 100,
+        dataIndex: 'weight',
+        
+        render(text, reocrd) {
+          
+          return (
+            <div className='table-td-fullBG'>
+              {text}
+            </div>
+          );
+        },
+      });
+    }
     if (item.name === 'os') {
       columns.push({
         title: t('os'),

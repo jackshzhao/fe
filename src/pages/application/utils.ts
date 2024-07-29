@@ -3,7 +3,7 @@ import { IS_PLUS } from '@/utils/constant';
 
 export const getDefaultColumnsConfigs = () => {
   const columns = _.concat(
-    ['host_ip', 'tags', 'group_obj', 'update_at', 'mem_util', 'cpu_util', 'offset', 'health_level', 'alert_nums', 'cpu_num', 'os', 'arch', 'remote_addr','actions'],
+    ['host_ip', 'tags', 'group_obj', 'update_at', 'mem_util', 'cpu_util', 'offset','weight','alert_nums','health_level', 'cpu_num', 'os', 'arch', 'remote_addr','actions'],
     IS_PLUS ? ['agent_version'] : [],
     ['note'],
   );
@@ -33,3 +33,22 @@ export const getDefaultColumnsConfigs = () => {
 export const setDefaultColumnsConfigs = (columnsConfigs) => {
   localStorage.setItem('targets_columns_configs', JSON.stringify(columnsConfigs));
 };
+
+
+export function fetchJsonFromUrl(url) {
+  return fetch(url)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      return response.json(); // 将响应数据转换为JSON
+    })
+    .then(data => {
+      // 处理你的数据
+      
+      return data.data; // 返回datasource
+    })
+    .catch(error => {
+      console.error('Error fetching data:', error);
+    });
+}
