@@ -350,16 +350,40 @@ export default function List(props: IProps) {
         dataIndex: 'health_level',
         sorter: (a, b) => a.offset - b.offset,
         render(text, reocrd) {
-          if (reocrd.cpu_num === -1) return <Unknown />;
           let backgroundColor = RED_COLOR;
           if (Math.abs(text) >60 ) {
             backgroundColor = YELLOW_COLOR;
           }
-          if (Math.abs(text) >80) {
+          if (Math.abs(text) >90) {
             backgroundColor = GREEN_COLOR;
           }
           if (reocrd.target_up === 0) {
             backgroundColor = LOST_COLOR;
+          }
+          return (
+            <div
+              className='table-td-fullBG'
+              style={{
+                backgroundColor: backgroundColor,
+              }}
+            >
+              {text}
+            </div>
+          );
+        },
+      });
+    }
+    //告警数
+    if (item.name === 'alert_nums') {
+      columns.push({
+        title: (t('alert_nums')),
+        width: 100,
+        dataIndex: 'alert_nums',
+        sorter: (a, b) => a.offset - b.offset,
+        render(text, reocrd) {
+          let backgroundColor = GREEN_COLOR;
+          if (Math.abs(text) >0 ) {
+            backgroundColor = YELLOW_COLOR;
           }
           return (
             <div
@@ -401,7 +425,7 @@ export default function List(props: IProps) {
         title: (
           <Space>
             {t('update_at')}
-            <Tooltip title={<Trans ns='targets' i18nKey='update_at_tip' components={{ 1: <br /> }} />}>
+            <Tooltip title={t('update_at_tip')}>
               <InfoCircleOutlined />
             </Tooltip>
           </Space>
@@ -409,13 +433,17 @@ export default function List(props: IProps) {
         width: 100,
         dataIndex: 'update_at',
         render: (val, reocrd) => {
-          let result = moment.unix(val).format('YYYY-MM-DD HH:mm:ss');
+          // let result = moment.unix(val).format('YYYY-MM-DD HH:mm:ss');
+          let result = '在线'
           let backgroundColor = GREEN_COLOR;
           if (reocrd.target_up === 0) {
             backgroundColor = RED_COLOR;
-          } else if (reocrd.target_up === 1) {
-            backgroundColor = YELLOW_COLOR;
+            result = '离线'
           }
+          //  else if (reocrd.target_up === 1) {
+          //   backgroundColor = YELLOW_COLOR;
+          // }
+          console.log("reocrd.target_up =========", reocrd.target_up)
           return (
             <div
               className='table-td-fullBG'

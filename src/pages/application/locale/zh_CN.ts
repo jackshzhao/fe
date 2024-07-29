@@ -17,15 +17,14 @@ const zh_CN = {
   cpu_util: 'CPU',
   cpu_num: '核数',
   health_level: '健康度',
+  alert_nums: '告警数',
   offset: '时间偏移',
   offset_tip: '计算逻辑为用 服务端部署机器的时间减去探针部署机器的时间',
   os: '操作系统',
   arch: 'CPU架构',
-  update_at: '更新时间',
+  update_at: '状态',
   update_at_tip: `
-    1分钟内有过心跳：绿色 <1 />
-    3分钟内有过心跳：黄色 <1 />
-    3分钟内没有心跳：红色
+    3分钟内没有心跳：离线
   `,
   remote_addr: '来源 IP',
   remote_addr_tip: '来源 IP 是从 HTTP Header 中获取的，如果经过了代理，不一定是真实的来源IP',

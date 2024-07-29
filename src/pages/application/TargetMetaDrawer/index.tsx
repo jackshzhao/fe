@@ -13,6 +13,24 @@ interface IProps {
   ident: string;
 }
 
+const transMetaData = new Map([
+  ['platform', '平台信息'],
+  ['cpu', 'CPU信息'],
+  ['memory', '内存信息'],
+  ['network','网卡信息'],
+  ['filesystem', '文件系统'],
+  ['GOARCH', '平台类型'],
+  ['GOOS', '系统类型'],
+  ['family', '处理器系列'],
+  ['goV', 'go版本'],
+  ['hostname', '主机名'],
+  ['kernel_name', '系统内核'],
+  ['kernel_release', '内核版本'],
+  ['machine', '处理器架构'],
+  ['os', '操作系统'],
+  ['pythonV', 'python版本'],
+]);
+
 function bytesToSize(bytes, precision) {
   bytes = parseInt(bytes);
   const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
@@ -107,6 +125,11 @@ function Group({ name, data }) {
   const [expand, setExpand] = useState(true);
   const { darkMode } = useContext(CommonStateContext);
 
+  const formatMate = (name) => {
+    const res = transMetaData.get(name);
+    return res; // 默认格式
+  };
+
   return (
     <div key={name} className='target-information-group'>
       <div className='target-information-group-header'>
@@ -120,7 +143,9 @@ function Group({ name, data }) {
             }}
           >
             {expand ? <DownOutlined /> : <RightOutlined />}
-            <span className='target-information-group-header-title'>{_.toUpper(name)}</span>
+            {/* <span className='target-information-group-header-title'>{_.toUpper(name)}</span> */}
+            <span className='target-information-group-header-title'>{formatMate(name)}</span>
+            
           </Space>
           {data && (
             <CopyOutlined
@@ -144,7 +169,7 @@ function Group({ name, data }) {
               }
               return (
                 <div key={key} className='target-information-group-content-item'>
-                  <div className='target-information-group-content-item-key'>{key}</div>
+                  <div className='target-information-group-content-item-key'>{formatMate(key)}</div>
                   {_.isString(value) && (
                     <div className='target-information-group-content-item-value'>
                       <Tooltip title={t('meta_value_click_to_copy')} placement='right'>
