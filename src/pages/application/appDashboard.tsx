@@ -63,9 +63,9 @@ const columnList = [
 
 // 根据健康值进度条返回对应的状态颜色
 const getStatusColor = (health: number): 'success' | 'warning' | 'exception' => {
-  if (health > 80) {
+  if (health > 90) {
       return 'success'; // 绿色
-  } else if (health >= 60) {
+  } else if (health >= 80) {
       return 'warning'; // 黄色
   } else {
       return 'exception'; // 红色
@@ -73,7 +73,7 @@ const getStatusColor = (health: number): 'success' | 'warning' | 'exception' => 
 };
 //应用统计数据
 const appStatisticData = {
-  labels: ['正常', '普通告警', '严重告警' ],
+  labels: ['健康', '亚健康', '异常' ],
   values: [820, 932, 901],//对应数量
 };
 

@@ -36,9 +36,8 @@ const transMetaData = new Map([
   ['cache_size', '缓存大小'],
   ['cpu_cores', 'cpu核心数'],
   ['cpu_logical_processors', 'cpu逻辑核心数'],
-  ['family', 'cpu家族'],
+  ['family', 'cpu系列'],
   ['mhz', '时钟频率'],
-  ['model', 'cpu型号'],
   ['model_name', '型号名称'],
   ['stepping', 'cpu修订版本'],
   ['vendor_id', '供应商'],
@@ -54,7 +53,7 @@ const transMetaData = new Map([
   ['cache_size', '缓存大小'],
   ['cpu_cores', 'cpu核心数'],
   ['cpu_logical_processors', 'cpu逻辑核心数'],
-  ['family', 'cpu家族'],
+  ['family', 'cpu系列'],
   ['mhz', '时钟频率'],
   ['model', 'cpu型号'],
   ['model_name', '型号名称'],
@@ -158,6 +157,9 @@ function Group({ name, data }) {
 
   const formatMate = (name) => {
     const res = transMetaData.get(name);
+    if(res== undefined) {
+      return name
+    }
     return res; // 默认格式
   };
 
