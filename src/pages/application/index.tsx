@@ -10,6 +10,8 @@ import { getBusiGroups } from '@/services/common';
 import { CommonStateContext } from '@/App';
 import LineChart from './LineChart';
 import AlertList from './AlertList';
+import AlertLineChart from './AlertLineChart';
+import {getAlertTendcy} from '@/services/application';
 import List from './List';
 //import BusinessGroup from './BusinessGroup';
 import BusinessGroup2, { getCleanBusinessGroupIds } from '@/components/BusinessGroup';
@@ -335,6 +337,16 @@ const Application: React.FC = () => {
   const [selectedIdents, setSelectedIdents] = useState<string[]>([]);
   const [refreshFlag, setRefreshFlag] = useState(_.uniqueId('refreshFlag_')); //利用 _.uniqueId('refreshFlag_') 方法生成了一个初始的唯一 ID
   const [showLineChart, setShowLineChart] = useState(false);
+  const [alertLineData,setalertLineData] = useState();
+
+  useEffect(() => {
+    getAlertTendcy(gids).then((res) => {
+      console.log("res1:",res)
+      setalertLineData(res);
+      
+    });
+        
+  }, [gids]);
   return (
     <PageLayout icon={<DatabaseOutlined />} title={t('title')}>
       <div className='object-manage-page-content'>

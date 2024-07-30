@@ -11,6 +11,7 @@ const Grid = ({ charts }) => {
   };
 
   useEffect(() => {
+    console.log("charts:",charts)
     const handleResize = () => {
       charts.forEach((_, index) => {
         const chartElement = document.getElementById(`chart-${index}`);
@@ -33,7 +34,6 @@ const Grid = ({ charts }) => {
       {charts.map((chart, index) => (
         <div key={index} id={`chart-${index}`} style={{ width: '100%', height: '100%' }}>
           <DashboardChart data={chart} />
-          
         </div>
       ))}
     </div>

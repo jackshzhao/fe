@@ -48,3 +48,4 @@ export const updateRecordingRules = function (data: { ids: React.Key[]; fields: 
     data: data,
   });
 };
+

@@ -35,20 +35,27 @@ export const setDefaultColumnsConfigs = (columnsConfigs) => {
 };
 
 
-export function fetchJsonFromUrl(url) {
-  return fetch(url)
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      return response.json(); // 将响应数据转换为JSON
-    })
-    .then(data => {
-      // 处理你的数据
+export const fetchData = async <T>(url: string): Promise<T> => {
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error('Network response was not ok');
+  }
+  return await response.json();
+};
+// export function fetchData(url) {
+//   return fetch(url)
+//     .then(response => {
+//       if (!response.ok) {
+//         throw new Error(`HTTP error! Status: ${response.status}`);
+//       }
+//       return response.json(); // 将响应数据转换为JSON
+//     })
+//     .then(data => {
+//       // 处理你的数据
       
-      return data.data; // 返回datasource
-    })
-    .catch(error => {
-      console.error('Error fetching data:', error);
-    });
-}
+//       return data.data; // 返回datasource
+//     })
+//     .catch(error => {
+//       console.error('Error fetching data:', error);
+//     });
+// }

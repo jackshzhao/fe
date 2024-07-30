@@ -22,7 +22,7 @@ echarts.use([
 interface ChartProps {
   data: { 
     name: string; 
-    health: number; // 纵坐标
+    health_level: number; // 纵坐标
   };
 }
 
@@ -56,11 +56,11 @@ const Chart: React.FC<ChartProps> = ({ data }) => {
             label: {//每个数据的标签
                 show: true,//设置为true则显示第一个数据
                 position: 'center',//位置居中
-                formatter:'{d}',//{d}表示数据在总数据中的百分比
+                formatter:() => `${data.health_level}`,//{d}表示数据在总数据中的百分比
                 fontSize:15,
                 //fontWeight:'bold'
             },
-            color: [data.health < 60 ? '#ff4d4f' : data.health < 80 ? 'yellow' : '#52c41a', '#d7dbde'],//系列的颜色
+            color: [data.health_level < 60 ? '#ff4d4f' : data.health_level < 80 ? 'yellow' : '#52c41a', '#d7dbde'],//系列的颜色
             emphasis: {//高亮，即鼠标经过时的样式
                 scale:false//表示不放大item
             },
@@ -68,11 +68,11 @@ const Chart: React.FC<ChartProps> = ({ data }) => {
                 show: true
             },
             data: [
-                {value: data.health, name: ''},
-                {value:100-data.health, name:'',
+                {value: data.health_level, name: ''},
+                {value:100-data.health_level, name:'',
                 emphasis:{
                     label:{
-                        show:false//这个数据高亮时不显示label，就不会显示替遮住第一个数据的label值了
+                        show:true//这个数据高亮时不显示label，就不会显示替遮住第一个数据的label值了
                     }
                 }}
             ]
