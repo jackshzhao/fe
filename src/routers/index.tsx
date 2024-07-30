@@ -25,6 +25,8 @@ import Page403 from '@/pages/notFound/Page403';
 import OutOfService from '@/pages/notFound/OutOfService';
 import NotFound from '@/pages/notFound';
 import Login from '@/pages/login';
+import LoginGateway from '@/pages/login/index_gateway';
+import Loginxxx from '@/pages/login/index_user_pass';
 import Overview from '@/pages/login/overview';
 import LoginCallback from '@/pages/loginCallback';
 import LoginCallbackCAS from '@/pages/loginCallback/cas';
@@ -147,6 +149,8 @@ export default function Content() {
         <Route path='/demo' component={Demo} />
         <Route path='/overview' component={Overview} />
         <Route path='/login' component={Login} exact />
+        <Route path='/logingateway' component={LoginGateway} exact />
+        <Route path='/loginxxx' component={Loginxxx} exact />
         <Route path='/callback' component={LoginCallback} exact />
         <Route path='/callback/cas' component={LoginCallbackCAS} exact />
         <Route path='/callback/oauth' component={LoginCallbackOAuth} exact />

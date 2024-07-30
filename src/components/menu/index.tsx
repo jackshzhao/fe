@@ -267,6 +267,8 @@ const SideMenu: FC = () => {
   const hideSideMenu = () => {
     if (
       location.pathname === '/login' ||
+      location.pathname === '/loginxxx' ||
+      location.pathname === '/logingateway' ||
       location.pathname.startsWith('/chart/') ||
       location.pathname.startsWith('/dashboards/share/') ||
       location.pathname === '/callback' ||

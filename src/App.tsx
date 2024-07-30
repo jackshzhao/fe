@@ -296,7 +296,7 @@ function App() {
                 <Content />
               </>
             </Switch>
-            <Feedback />
+            {/* <Feedback /> */}
           </Router>
         </ConfigProvider>
       </CommonStateContext.Provider>

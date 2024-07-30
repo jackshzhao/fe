@@ -25,6 +25,13 @@ export const authLogin = function (username: string, password: string, captchaid
   });
 };
 
+export const authLoginWithPass = function (username: string, password: string, captchaid?: string, verifyvalue?: string) {
+  return request(`/api/n9e/auth/login_xxx`, {
+    method: RequestMethod.Post,
+    data: { username, password, captchaid, verifyvalue },
+  });
+};
+
 export const getCaptcha = function () {
   return request('/api/n9e/auth/captcha', {
     method: RequestMethod.Post,
