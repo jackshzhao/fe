@@ -404,6 +404,23 @@ export default function List(props: IProps) {
         title: t('weight'),
         dataIndex: 'weight',
         className: 'n9e-hosts-table-column-ip',
+        render(text, reocrd) {
+          
+          if (Math.abs(text) ===1 ) {
+            text = '关键节点';
+          }
+          if (Math.abs(text) === 0) {
+            text = '普通节点';
+          }
+          
+          return (
+            <div
+              className='n9e-hosts-table-column-ip'
+            >
+              {text}
+            </div>
+          );
+        },
       });
     }
     if (item.name === 'os') {

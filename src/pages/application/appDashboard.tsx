@@ -27,14 +27,36 @@ const appDashboard: React.FC = () => {
   const [appHealthData,setappHealthData] = useState([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [appStatisticData,setappStatisticData]=useState<[string, number][]>([
+    ['健康', 0],
+    ['亚健康', 0],
+    ['异常', 0],
+  ]);
   //院级核心应用数据
 
   //院级应用健康列表数据
   useEffect(() => {
+    let healthCount = 0;
+    let subHealthCount = 0;
+    let abnormalCount = 0;
     getAppHealth().then((res) => {
-      //console.log("setAppList:",res)
+      console.log("setAppList:",res)
       setAppList(res);
-      setAppListTotal(res.length)      
+      setAppListTotal(res.length) 
+      for(var i = 0; i < res.length; i++){
+        if(res[i].health_level >= 90){
+          healthCount++;
+        }else if(res[i].health_level >= 70 ){
+          subHealthCount++;
+        }else{
+          abnormalCount++;
+        }
+      }
+      setappStatisticData([
+        ['健康', healthCount],
+        ['亚健康', subHealthCount],
+        ['异常', abnormalCount],
+      ]);          
     });
 
     getAlertTendcy("count").then((res) => {
@@ -90,11 +112,6 @@ const getStatusColor = (health: number): 'success' | 'warning' | 'exception' => 
   } else {
       return 'exception'; // 红色
   }
-};
-//应用统计数据
-const appStatisticData = {
-  labels: ['健康', '亚健康', '异常' ],
-  values: [820, 932, 901],//对应数量
 };
 
 

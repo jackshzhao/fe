@@ -22,22 +22,14 @@ echarts.use([
 ]);
 
 interface ChartProps {
-  data: { 
-    labels: string[]; 
-    values: number[] 
-  };
+  data: [string, number][];
 }
 
 const Chart: React.FC<ChartProps> = ({ data }) => {
+  const xData = data.map(point => point[0]); // 提取 X 轴数据
+  const yData = data.map(point => point[1]); // 提取 Y 轴数据
   const option = {
-    // title: {
-    //   text: '应用统计',
-    //   left: 'center', // 设置标题居中
-    //   textStyle: {
-    //     fontSize: 18,
-    //     fontWeight: 'bold',
-    //   },
-    // },
+    
     tooltip: {
       trigger: 'item',
       formatter: '{a} <br/>{b}: {c} ({d}%)',
@@ -45,7 +37,7 @@ const Chart: React.FC<ChartProps> = ({ data }) => {
     legend: {
       orient: 'vertical',
       left: 10,
-      data: data.labels,
+      data: xData,
     },
     series: [
       {
@@ -67,9 +59,9 @@ const Chart: React.FC<ChartProps> = ({ data }) => {
         labelLine: {
           show: false,
         },
-        data: data.values.map((value, index) => ({
+        data:yData.map((value, index) => ({
           value,
-          name: data.labels[index],
+          name: xData[index],
           itemStyle: {
             color: index === 0 ? '#52c41a' : index === 1 ? 'yellow' : '#ff4d4f', // 分别设置为绿色、黄色、红色
           },

@@ -13,18 +13,22 @@ export const getAppHealth = function(){
 }
 
 export const getAlertTendcy = function (id?: string) {
-    return request(`/api/n9e/proxy/1/api/v1/query_range?query=application_health_${id}&start=1722268800&end=1722355199&step=360`, {
+    return request(`/api/n9e/proxy/1/api/v1/query_range?query=application_health_${id}&start=1722355200&end=1722441599&step=360`, {
       method: RequestMethod.Get,
       params: {
         id,
       },
     }).then((res) => {
+      //console.log("res.data.result:",res.data.result)
+      if(res.data.result.length === 0){
+        return [];
+      }
       return res.data.result[0].values;
     });
 };
 
 export const getAppHealthList = function () {
-    return request(`/api/n9e/proxy/1/api/v1/query_range?query=application_health_count&start=1719741979&end=1722333979&step=10800`, {
+    return request(`/api/n9e/proxy/1/api/v1/query_range?query=application_health_count&start=1719763200&end=1722441599&step=10800`, {
       method: RequestMethod.Get,
       
     }).then((res) => {
