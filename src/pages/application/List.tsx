@@ -374,11 +374,11 @@ export default function List(props: IProps) {
       });
     }
     //告警数
-    if (item.name === 'alert_nums') {
+    if (item.name === 'alert_num') {
       columns.push({
-        title: (t('alert_nums')),
+        title: (t('alert_num')),
         width: 100,
-        dataIndex: 'alert_nums',
+        dataIndex: 'alert_num',
         sorter: (a, b) => a.offset - b.offset,
         render(text, reocrd) {
           let backgroundColor = GREEN_COLOR;
@@ -398,22 +398,12 @@ export default function List(props: IProps) {
         },
       });
     }
-    //权重
-    
+    //权重    
     if (item.name === 'weight') {
       columns.push({
-        title: (t('weight')),
-        width: 100,
+        title: t('weight'),
         dataIndex: 'weight',
-        
-        render(text, reocrd) {
-          
-          return (
-            <div className='table-td-fullBG'>
-              {text}
-            </div>
-          );
-        },
+        className: 'n9e-hosts-table-column-ip',
       });
     }
     if (item.name === 'os') {

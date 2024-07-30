@@ -49,7 +49,7 @@ const Chart: React.FC<ChartProps> = ({ data }) => {
         {
             name: data.name,
             type: 'pie',//pie类型的图实现环形图
-            radius: ['32%','58%'],//数组的话，表示内圆和外圆的半径大小，相对于宽高中较小的那一个。
+            radius: ['40%','65%'],//数组的话，表示内圆和外圆的半径大小，相对于宽高中较小的那一个。
             center:['50%','50%'],//圆心坐标
             avoidLabelOverlap: false,//是否启用防止标签重叠策略
             startAngle:270,//第一个数据开始绘制的角度，以正交直角坐标系为标准

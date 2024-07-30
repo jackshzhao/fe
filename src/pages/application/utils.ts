@@ -3,7 +3,7 @@ import { IS_PLUS } from '@/utils/constant';
 
 export const getDefaultColumnsConfigs = () => {
   const columns = _.concat(
-    ['host_ip', 'tags', 'group_obj', 'update_at', 'mem_util', 'cpu_util', 'offset','weight','alert_nums','health_level', 'cpu_num', 'os', 'arch', 'remote_addr','actions'],
+    ['host_ip', 'tags', 'group_obj', 'update_at', 'mem_util', 'cpu_util', 'offset','weight','alert_num','health_level', 'cpu_num', 'os', 'arch', 'remote_addr','actions'],
     IS_PLUS ? ['agent_version'] : [],
     ['note'],
   );
@@ -35,27 +35,30 @@ export const setDefaultColumnsConfigs = (columnsConfigs) => {
 };
 
 
-export const fetchData = async <T>(url: string): Promise<T> => {
-  const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error('Network response was not ok');
-  }
-  return await response.json();
+
+//时间转换
+export const formatTimesHour = (timestamp: number): string => {
+  const date = new Date(timestamp * 1000); // 将 Unix 时间戳（秒）转换为 JavaScript 时间戳（毫秒）
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 月份从 0 开始，需要加 1
+  const day = date.getDate().toString().padStart(2, '0');
+  const hours = date.getHours().toString().padStart(2, '0');
+  const minutes = date.getMinutes().toString().padStart(2, '0');
+  const seconds = date.getSeconds().toString().padStart(2, '0');
+
+  return `${hours}:${minutes}:${seconds}`;
 };
-// export function fetchData(url) {
-//   return fetch(url)
-//     .then(response => {
-//       if (!response.ok) {
-//         throw new Error(`HTTP error! Status: ${response.status}`);
-//       }
-//       return response.json(); // 将响应数据转换为JSON
-//     })
-//     .then(data => {
-//       // 处理你的数据
-      
-//       return data.data; // 返回datasource
-//     })
-//     .catch(error => {
-//       console.error('Error fetching data:', error);
-//     });
-// }
+
+export const formatTimeDay = (timestamp: number): string => {
+  const date = new Date(timestamp * 1000); // 将 Unix 时间戳（秒）转换为 JavaScript 时间戳（毫秒）
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 月份从 0 开始，需要加 1
+  const day = date.getDate().toString().padStart(2, '0');
+  const hours = date.getHours().toString().padStart(2, '0');
+  const minutes = date.getMinutes().toString().padStart(2, '0');
+  const seconds = date.getSeconds().toString().padStart(2, '0');
+
+  //return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+  return `${month}-${day}`;
+};
+

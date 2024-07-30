@@ -6,8 +6,9 @@ const Grid = ({ charts }) => {
   // 计算每个网格的样式
   const gridStyle = {
     display: 'grid',
-    gridTemplateColumns: 'repeat(3, 1fr)', // 三列网格
-    gap: '2px',
+    gridTemplateColumns: 'repeat(2, 1fr)',
+    gridTemplateRows: 'repeat(2, 1fr)',
+    gap: '1px',
   };
 
   useEffect(() => {

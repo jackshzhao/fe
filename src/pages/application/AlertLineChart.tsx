@@ -24,14 +24,16 @@ echarts.use([
 ]);
 
 interface ChartProps {
-  data: { 
-    labels: string[]; 
-    values: number[] 
-  };
+  data: [string, number][];
+  ystep: number;
+  ymax: number;
 }
 
 
-const Chart: React.FC<ChartProps> = ({ data }) => {
+const Chart: React.FC<ChartProps> = ({ data ,ystep,ymax}) => {
+  const xData = data.map(point => point[0]);
+  const yData = data.map(point => point[1]);
+
   const option = {
    
     tooltip: {
@@ -39,14 +41,16 @@ const Chart: React.FC<ChartProps> = ({ data }) => {
     },
     xAxis: {
       type: 'category',
-      data: data.labels,
+      data: xData,
     },
     yAxis: {
       type: 'value',
+      max: ymax,
+      interval: ystep,
     },
     series: [
       {
-        data: data.values,
+        data: yData,
         type: 'line',
         smooth: 0.6,
         symbol: 'none',

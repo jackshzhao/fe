@@ -17,7 +17,7 @@ const zh_CN = {
   cpu_util: 'CPU',
   cpu_num: '核数',
   health_level: '健康度',
-  alert_nums: '告警数',
+  alert_num: '告警数',
   weight: '权重',
   offset: '时间偏移',
   offset_tip: '计算逻辑为用 服务端部署机器的时间减去探针部署机器的时间',

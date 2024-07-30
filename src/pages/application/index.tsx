@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback, useContext } from 'react';
-import { Modal, Tag, Form, Input, Alert, Select, Tooltip } from 'antd';
+import { Modal, Tag, Form, Input, Alert, Select, Tooltip,Table } from 'antd';
 import { DatabaseOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import _, { debounce } from 'lodash';
@@ -8,11 +8,12 @@ import { bindTags, unbindTags, moveTargetBusi, updateTargetNote, deleteTargets, 
 import PageLayout from '@/components/pageLayout';
 import { getBusiGroups } from '@/services/common';
 import { CommonStateContext } from '@/App';
-import LineChart from './LineChart';
-import AlertList from './AlertList';
+
+
 import AlertLineChart from './AlertLineChart';
-import {getAlertTendcy} from '@/services/application';
+import {getAlertTendcy,getAlertTable} from '@/services/application';
 import List from './List';
+import {formatTimesHour} from './utils'
 //import BusinessGroup from './BusinessGroup';
 import BusinessGroup2, { getCleanBusinessGroupIds } from '@/components/BusinessGroup';
 import './locale';
@@ -337,16 +338,64 @@ const Application: React.FC = () => {
   const [selectedIdents, setSelectedIdents] = useState<string[]>([]);
   const [refreshFlag, setRefreshFlag] = useState(_.uniqueId('refreshFlag_')); //利用 _.uniqueId('refreshFlag_') 方法生成了一个初始的唯一 ID
   const [showLineChart, setShowLineChart] = useState(false);
-  const [alertLineData,setalertLineData] = useState();
+  const [alertLineData,setalertLineData] = useState([]);
+  const [alertTableData,setalertTableData] = useState([]);
 
   useEffect(() => {
     getAlertTendcy(gids).then((res) => {
-      console.log("res1:",res)
+      for(var i = 0; i < res.length; i++){
+        res[i][0] = formatTimesHour(res[i][0])
+      }
+      //console.log("res1:",res)
       setalertLineData(res);
-      
+    });
+
+    getAlertTable(gids).then((res) => {
+      for(var i = 0; i < res.length; i++){
+        res[i].first_trigger_time = formatTimesHour(res[i].first_trigger_time)
+        res[i].trigger_time = formatTimesHour(res[i].trigger_time)
+        if(res[i].severity === 1){
+          res[i].severity = '紧急告警'
+        }
+        if(res[i].severity === 2){
+          res[i].severity = '重要告警'
+        }
+        if(res[i].severity === 3){
+          res[i].severity = '普通告警'
+        }
+      }      
+      //console.log("res2:",res)
+      setalertTableData(res);
     });
         
   }, [gids]);
+
+  const alertColumns = [
+    {
+      title: '机器',
+      dataIndex: 'target_ident',
+      key: 'target_ident',
+    },
+    {
+      title: '告警名称',
+      dataIndex: 'rule_name',
+      key: 'rule_name',
+    },{
+      title: '告警级别',
+      dataIndex: 'severity',
+      key: 'severity',
+    },
+    {
+      title: '首次触发时间',
+      dataIndex: 'first_trigger_time',
+      key: 'first_trigger_time',
+    },
+    {
+      title: '触发时间',
+      dataIndex: 'trigger_time',
+      key: 'trigger_time',
+    },
+  ];
   return (
     <PageLayout icon={<DatabaseOutlined />} title={t('title')}>
       <div className='object-manage-page-content'>
@@ -408,10 +457,19 @@ const Application: React.FC = () => {
           />
 
           {/* 访问延迟 */}
-          {showLineChart && <LineChart/>}
-
+          {showLineChart && <h4 style={{textAlign: 'center'}}>应用健康趋势图</h4>}
+          {showLineChart && <div style={{height:'280px'}}>
+            <AlertLineChart data={alertLineData} ymax={100} ystep={20}/>
+            </div>}
           {/* 告警信息 */}
-          {showLineChart && <AlertList/>}
+          {showLineChart && <h4 style={{textAlign: 'center'}}>告警信息表</h4>}
+          {showLineChart &&  
+            <Table
+                  
+                  dataSource={alertTableData}
+                  columns={alertColumns}
+                  pagination={false} // Disable pagination for simplicity
+            />}
         </div>
       </div>
       <OperationModal

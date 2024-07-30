@@ -22,13 +22,13 @@ echarts.use([
 ]);
 
 interface ChartProps {
-  data: { 
-    labels: string[]; //横坐标
-    values: number[]; //纵坐标
-  };
+  data: { name: string; usability: number }[];
 }
 
 const Chart: React.FC<ChartProps> = ({ data }) => {
+  const xData = data.map(point => point.name); // 提取 X 轴数据
+  const yData = data.map(point => point.usability); // 提取 Y 轴数据
+
   const option = {
     
     tooltip: {
@@ -36,15 +36,25 @@ const Chart: React.FC<ChartProps> = ({ data }) => {
     },
     xAxis: {
       type: 'category',
-      data: data.labels,
+      data: xData,
     },
     yAxis: {
       type: 'value',
+      max: 100,
+      interval: 20,
+      axisLabel: {
+        formatter: '{value}%',
+      }
     },
     series: [
       {
-        data: data.values,
+        data: yData,
         type: 'bar',
+        label: {
+          show: true,
+          position: 'top',
+          formatter: '{c}%',
+        },
       },
     ],
   };
