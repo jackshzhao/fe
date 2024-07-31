@@ -14,10 +14,12 @@ import AlertLineChart from './AlertLineChart';
 import {getAlertTendcy,getAlertTable} from '@/services/application';
 import List from './List';
 import {formatTimesHour, getTimesRange} from './utils'
-//import BusinessGroup from './BusinessGroup';
+import BusinessGroup from './BusinessGroup';
 import BusinessGroup2, { getCleanBusinessGroupIds } from '@/components/BusinessGroup';
 import './locale';
 import './index.less';
+
+export { BusinessGroup }; // TODO 部分页面使用的老的业务组组件，后续逐步替换
 
 enum OperateType {
   BindTag = 'bindTag',
@@ -343,11 +345,12 @@ const Application: React.FC = () => {
   const [timesrange_7d, setTimerange_7d] = useState<{ start: number, end: number }>({ start: 0, end: 0 });
 
   useEffect(() => {
+    if (gids === undefined) {
+      return; 
+    }
     //获取7天的时间范围
     const { start, end } = getTimesRange(7,0,0);
-    console.log(`start1${start}, end1${end} `)
-    setTimerange_7d({ start, end });
-    console.log(`timesrange_7d:${timesrange_7d.start}   ${timesrange_7d.end}`)
+    //console.log(`start1${start}, end1${end} `)
     
     getAlertTendcy(gids,start,end,2520).then((res) => {
       for(var i = 0; i < res.length; i++){
@@ -472,7 +475,7 @@ const Application: React.FC = () => {
           {showLineChart && <h4 style={{textAlign: 'center'}}>告警信息表</h4>}
           {showLineChart &&  
             <Table
-                  
+                  rowKey={alertTableData=>alertTableData['id']}
                   dataSource={alertTableData}
                   columns={alertColumns}
                   pagination={false} // Disable pagination for simplicity
