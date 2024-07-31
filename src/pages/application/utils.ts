@@ -46,7 +46,7 @@ export const formatTimesHour = (timestamp: number): string => {
   const minutes = date.getMinutes().toString().padStart(2, '0');
   const seconds = date.getSeconds().toString().padStart(2, '0');
 
-  return `${hours}:${minutes}:${seconds}`;
+  return `${month}-${day} ${hours}:${minutes}:${seconds}`;
 };
 
 export const formatTimeDay = (timestamp: number): string => {
