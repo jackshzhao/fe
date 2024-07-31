@@ -13,8 +13,8 @@ import 'antd/dist/antd.css';
 import './appDashboard.less'
 import { transform } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
-import {getAppHealth, getAlertTendcy,getAppHealthList} from '@/services/application'
-import {formatTimesHour,formatTimeDay} from './utils'
+import {getAppHealth,getAppHealthList} from '@/services/application'
+import {formatTimesHour,formatTimeDay,getTimesRange} from './utils'
 
 const { Sider, Content, Footer } = Layout;
 const appDashboard: React.FC = () => {
@@ -23,8 +23,8 @@ const appDashboard: React.FC = () => {
   const chartsPerPage = 9;
   const [appList, setAppList] = useState<any[]>([]);
   const [appListTotal, setAppListTotal] = useState(0);
-  const [appLineData,setappLineData] = useState([]);
   const [appHealthData,setappHealthData] = useState([]);
+  const [timesrange_1, setTimerange_1] = useState<{ start: number, end: number }>({ start: 0, end: 0 });
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [appStatisticData,setappStatisticData]=useState<[string, number][]>([
@@ -36,9 +36,13 @@ const appDashboard: React.FC = () => {
 
   //院级应用健康列表数据
   useEffect(() => {
+    //获取24小时的时间范围
+    const { start, end } = getTimesRange(1,0,0);
+    setTimerange_1({ start, end });
     let healthCount = 0;
     let subHealthCount = 0;
     let abnormalCount = 0;
+    //所有应用、核心应用、可用性、应用告警统计
     getAppHealth().then((res) => {
       console.log("setAppList:",res)
       setAppList(res);
@@ -59,14 +63,7 @@ const appDashboard: React.FC = () => {
       ]);          
     });
 
-    getAlertTendcy("count").then((res) => {
-      for(var i = 0; i < res.length; i++){
-        res[i][0] = formatTimesHour(res[i][0])
-      }
-      //console.log("getAlertTendcy:",res)
-      setappLineData(res);
-    });
-
+    //应用健康度统计
     getAppHealthList().then((res) => {
       for(var i = 0; i < res.length; i++){
         res[i][0] = formatTimeDay(res[i][0])
@@ -104,11 +101,11 @@ const columnList = [
 ];
 
 // 根据健康值进度条返回对应的状态颜色
-const getStatusColor = (health: number): 'success' | 'warning' | 'exception' => {
+const getStatusColor = (health: number): 'success' | 'normal' | 'exception' => {
   if (health >= 90) {
       return 'success'; // 绿色
   } else if (health >= 70) {
-      return 'warning'; // 黄色
+      return 'normal'; // 黄色
   } else {
       return 'exception'; // 红色
   }
@@ -139,7 +136,7 @@ const getStatusColor = (health: number): 'success' | 'warning' | 'exception' => 
           
         </div>
         <div style={{ height: '50%', border: '1px solid #ccc' ,margin: '0px 10px 0px 0px',}}>
-          <h4 style={{textAlign: 'center'}}>健康应用统计</h4>
+          <h4 style={{textAlign: 'center'}}>应用健康度统计</h4>
             <AlertLineChart data={appHealthData} ystep={2} ymax={8}/>
         </div>
       </div>

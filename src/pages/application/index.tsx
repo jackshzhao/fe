@@ -13,7 +13,7 @@ import { CommonStateContext } from '@/App';
 import AlertLineChart from './AlertLineChart';
 import {getAlertTendcy,getAlertTable} from '@/services/application';
 import List from './List';
-import {formatTimesHour} from './utils'
+import {formatTimesHour, getTimesRange} from './utils'
 //import BusinessGroup from './BusinessGroup';
 import BusinessGroup2, { getCleanBusinessGroupIds } from '@/components/BusinessGroup';
 import './locale';
@@ -340,9 +340,16 @@ const Application: React.FC = () => {
   const [showLineChart, setShowLineChart] = useState(false);
   const [alertLineData,setalertLineData] = useState([]);
   const [alertTableData,setalertTableData] = useState([]);
+  const [timesrange_7d, setTimerange_7d] = useState<{ start: number, end: number }>({ start: 0, end: 0 });
 
   useEffect(() => {
-    getAlertTendcy(gids).then((res) => {
+    //获取7天的时间范围
+    const { start, end } = getTimesRange(7,0,0);
+    console.log(`start1${start}, end1${end} `)
+    setTimerange_7d(getTimesRange(7,0,0));
+    console.log(`timesrange_7d:${timesrange_7d.start}   ${timesrange_7d.end}`)
+    
+    getAlertTendcy(gids,timesrange_7d,2520).then((res) => {
       for(var i = 0; i < res.length; i++){
         res[i][0] = formatTimesHour(res[i][0])
       }

@@ -3,6 +3,8 @@ import semver from 'semver';
 import request from '@/utils/request';
 import { RequestMethod } from '@/store/common';
 import { N9E_PATHNAME } from '@/utils/constant';
+import { start } from 'repl';
+import { number } from 'echarts';
 export const getAppHealth = function(){
     return request('/api/n9e/busi-groups?all=true&limit=5000', {
         method: RequestMethod.Get,
@@ -12,8 +14,8 @@ export const getAppHealth = function(){
       });
 }
 
-export const getAlertTendcy = function (id?: string) {
-    return request(`/api/n9e/proxy/1/api/v1/query_range?query=application_health_${id}&start=1722355200&end=1722441599&step=360`, {
+export const getAlertTendcy = function (id?: string, start?:number,end?:number,step?:number) {
+    return request(`/api/n9e/proxy/1/api/v1/query_range?query=application_health_${id}&start=${start}&end=${end}&step=${step}`, {
       method: RequestMethod.Get,
       params: {
         id,
@@ -27,11 +29,14 @@ export const getAlertTendcy = function (id?: string) {
     });
 };
 
-export const getAppHealthList = function () {
-    return request(`/api/n9e/proxy/1/api/v1/query_range?query=application_health_count&start=1719763200&end=1722441599&step=10800`, {
+export const getAppHealthList = function (timeRange?: {start:number,end:number},step?:number) {
+    return request(`/api/n9e/proxy/1/api/v1/query_range?query=application_health_count&start=${timeRange?.start}&end=${timeRange?.end}&step=${step}`, {
       method: RequestMethod.Get,
       
     }).then((res) => {
+      if(res.data.result.length === 0){
+        return [];
+      }
       return res.data.result[0].values;
     });
 };

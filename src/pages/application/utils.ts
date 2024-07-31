@@ -62,3 +62,16 @@ export const formatTimeDay = (timestamp: number): string => {
   return `${month}-${day}`;
 };
 
+// 计算时间戳，传参数为天数
+export const getTimesRange = (days: number,hours: number,minutes: number): { start: number, end: number } => {
+  // 获取当前时间的时间戳（单位：毫秒）
+  const now = new Date();
+  const start = now.getTime();
+
+  // 计算 `days` 天前的时间戳
+  const end = new Date(start - days * 24 * 60 * 60 * 1000 - hours * 60 * 60 * 1000 - minutes * 60 * 1000).getTime();
+  //console.log(`start:${start}   end:${end}`)
+  return { start, end };
+};
+
+
