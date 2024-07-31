@@ -60,7 +60,7 @@ const Chart: React.FC<ChartProps> = ({ data }) => {
                 fontSize:15,
                 //fontWeight:'bold'
             },
-            color: [data.health_level < 60 ? '#ff4d4f' : data.health_level < 80 ? 'yellow' : '#52c41a', '#d7dbde'],//系列的颜色
+            color: [data.health_level < 70 ? '#ff4d4f' : data.health_level < 90 ? 'yellow' : '#52c41a', '#d7dbde'],//系列的颜色
             emphasis: {//高亮，即鼠标经过时的样式
                 scale:false//表示不放大item
             },
