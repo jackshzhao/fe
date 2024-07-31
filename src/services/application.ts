@@ -19,6 +19,9 @@ export const getAlertTendcy = function (id?: string, start?:number,end?:number,s
       method: RequestMethod.Get,
       params: {
         id,
+        start,
+        end,
+        step,
       },
     }).then((res) => {
       //console.log("res.data.result:",res.data.result)
@@ -29,10 +32,14 @@ export const getAlertTendcy = function (id?: string, start?:number,end?:number,s
     });
 };
 
-export const getAppHealthList = function (timeRange?: {start:number,end:number},step?:number) {
-    return request(`/api/n9e/proxy/1/api/v1/query_range?query=application_health_count&start=${timeRange?.start}&end=${timeRange?.end}&step=${step}`, {
+export const getAppHealthList = function (start?:number,end?:number,step?:number) {
+    return request(`/api/n9e/proxy/1/api/v1/query_range?query=application_health_count&start=${start}&end=${end}&step=${step}`, {
       method: RequestMethod.Get,
-      
+      params: {
+        start,
+        end,
+        step,
+      },
     }).then((res) => {
       if(res.data.result.length === 0){
         return [];

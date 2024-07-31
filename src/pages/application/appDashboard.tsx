@@ -24,7 +24,7 @@ const appDashboard: React.FC = () => {
   const [appList, setAppList] = useState<any[]>([]);
   const [appListTotal, setAppListTotal] = useState(0);
   const [appHealthData,setappHealthData] = useState([]);
-  const [timesrange_1, setTimerange_1] = useState<{ start: number, end: number }>({ start: 0, end: 0 });
+  const [timesrange_30d, setTimerange_30d] = useState<{ start: number, end: number }>({ start: 0, end: 0 });
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [appStatisticData,setappStatisticData]=useState<[string, number][]>([
@@ -37,8 +37,8 @@ const appDashboard: React.FC = () => {
   //院级应用健康列表数据
   useEffect(() => {
     //获取24小时的时间范围
-    const { start, end } = getTimesRange(1,0,0);
-    setTimerange_1({ start, end });
+    const { start, end } = getTimesRange(30,0,0);
+    setTimerange_30d({ start, end });
     let healthCount = 0;
     let subHealthCount = 0;
     let abnormalCount = 0;
@@ -64,7 +64,7 @@ const appDashboard: React.FC = () => {
     });
 
     //应用健康度统计
-    getAppHealthList().then((res) => {
+    getAppHealthList(start,end,10800).then((res) => {
       for(var i = 0; i < res.length; i++){
         res[i][0] = formatTimeDay(res[i][0])
       }

@@ -346,10 +346,10 @@ const Application: React.FC = () => {
     //获取7天的时间范围
     const { start, end } = getTimesRange(7,0,0);
     console.log(`start1${start}, end1${end} `)
-    setTimerange_7d(getTimesRange(7,0,0));
+    setTimerange_7d({ start, end });
     console.log(`timesrange_7d:${timesrange_7d.start}   ${timesrange_7d.end}`)
     
-    getAlertTendcy(gids,timesrange_7d,2520).then((res) => {
+    getAlertTendcy(gids,start,end,2520).then((res) => {
       for(var i = 0; i < res.length; i++){
         res[i][0] = formatTimesHour(res[i][0])
       }
