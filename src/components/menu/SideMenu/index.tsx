@@ -33,10 +33,10 @@ export const getMenuList = (t) => {
           key: '/applications',
           label: t('应用大屏'),
         },
-        {
-          key: '/application-details',
-          label: t('应用详情'),
-        },
+        // {
+        //   key: '/application-details',
+        //   label: t('应用详情'),
+        // },
       ],
     },
     {

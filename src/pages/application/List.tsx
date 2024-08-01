@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect, useContext } from 'react';
 import { Table, Tag, Tooltip, Space, Input, Dropdown, Menu, Button, Modal, message, Select } from 'antd';
+import {Link} from 'react-router-dom';
 import { ColumnsType } from 'antd/es/table';
 import { SearchOutlined, DownOutlined, ReloadOutlined, CopyOutlined, ApartmentOutlined, InfoCircleOutlined, EyeOutlined } from '@ant-design/icons';
 import { useAntdTable } from 'ahooks';
@@ -26,6 +27,7 @@ import UpgradeAgent from 'plus:/parcels/Targets/UpgradeAgent';
 import VersionSelect from 'plus:/parcels/Targets/VersionSelect';
 // @ts-ignore
 import { extraColumns } from 'plus:/parcels/Targets';
+import { text } from 'd3';
 
 export const pageSizeOptions = ['10', '20', '50', '100'];
 
@@ -141,23 +143,15 @@ export default function List(props: IProps) {
       ),
       dataIndex: 'ident',
       className: 'n9e-hosts-table-column-ident',
-      render: (text, record) => {
-        return (
-          <Space>
-            <TargetMetaDrawer ident={text} />
-            {import.meta.env['VITE_IS_PRO'] && (
-              <Tooltip title='查看关联采集配置'>
-                <ApartmentOutlined
-                  onClick={() => {
-                    setCollectsDrawerVisible(true);
-                    setCollectsDrawerIdent(text);
-                  }}
-                />
-              </Tooltip>
-            )}
-          </Space>
-        );
-      },
+      render: (text, record) => { 
+        let dashboardID = 6;  
+        if(record.os === 'windows'){
+          dashboardID = 7;
+        }    
+        return(
+          <Link to={`/dashboard/${dashboardID}?ident=${text}&prom=1`} >{text}</Link>
+        )
+      }
     },
   ];
 
@@ -169,9 +163,25 @@ export default function List(props: IProps) {
       columns.push({
         title: t('actions'),
         key: 'actions',
-        render: (text: string, record: any) => (
-          <Button type="primary" size='small' onClick={()=>{history.push('/dashboards')}}>查看</Button>
-        ),
+        render: (text, record) => {
+          
+          return(
+            <Space>
+              <TargetMetaDrawer ident={record.ident} />
+              {import.meta.env['VITE_IS_PRO'] && (
+              <Tooltip title='查看关联采集配置'>
+                <ApartmentOutlined
+                  onClick={() => {
+                    setCollectsDrawerVisible(true);
+                    setCollectsDrawerIdent(text);
+                  }}
+                />
+              </Tooltip>
+            )}
+            </Space>
+          )
+          
+        }
       });
     }
    
@@ -539,6 +549,8 @@ export default function List(props: IProps) {
   const showTotal = (total: number) => {
     return t('common:table.total', { total });
   };
+
+  
 
   const { tableProps, run } = useAntdTable(featchData, {
     manual: true,

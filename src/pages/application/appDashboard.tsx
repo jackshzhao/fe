@@ -25,6 +25,7 @@ const appDashboard: React.FC = () => {
   const [appListTotal, setAppListTotal] = useState(0);
   const [appHealthData,setappHealthData] = useState([]);
   const [timesrange_30d, setTimerange_30d] = useState<{ start: number, end: number }>({ start: 0, end: 0 });
+  const [linkId,setLinkId] = useState(1);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [appStatisticData,setappStatisticData]=useState<[string, number][]>([
@@ -44,9 +45,10 @@ const appDashboard: React.FC = () => {
     let abnormalCount = 0;
     //所有应用、核心应用、可用性、应用告警统计
     getAppHealth().then((res) => {
-      console.log("setAppList:",res)
+      //console.log("setAppList:",res)
       setAppList(res);
-      setAppListTotal(res.length) 
+      setAppListTotal(res.length)
+      //setLinkId(res.id) 
       for(var i = 0; i < res.length; i++){
         if(res[i].health_level >= 90){
           healthCount++;
@@ -68,7 +70,7 @@ const appDashboard: React.FC = () => {
       for(var i = 0; i < res.length; i++){
         res[i][0] = formatTimeDay(res[i][0])
       }
-      console.log("setappHealthData:",res)
+      //console.log("setappHealthData:",res)
       setappHealthData(res); 
     });
         
@@ -84,7 +86,12 @@ const columnList = [
       width: '30%',
       key: 'name',
       // render: (text: string, record: application) => <Link to={`/system/${record.name}`}>{text}</Link>,
-      render: (text: string) => <Link to={`/application-details?ids=3&isLeaf=true`}>{text}</Link>
+      render: (text, record) => {        
+        return(
+          <Link to={`/application-details?ids=${record.id}&isLeaf=true`} >{text}</Link>
+        )
+      }
+      
   },
   {
       title: '健康值',

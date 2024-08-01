@@ -7,6 +7,7 @@ import classNames from 'classnames';
 import { bindTags, unbindTags, moveTargetBusi, updateTargetNote, deleteTargets, getTargetTags } from '@/services/targets';
 import PageLayout from '@/components/pageLayout';
 import { getBusiGroups } from '@/services/common';
+import {getMonObjectList} from '@/services/targets'
 import { CommonStateContext } from '@/App';
 
 
@@ -331,7 +332,7 @@ const OperationModal: React.FC<OperateionModalProps> = ({ operateType, setOperat
   );
 };
 
-const Application: React.FC = () => {
+const Application: React.FC = (props) => {
   const {t} = useTranslation("applications");
   const { businessGroup } = useContext(CommonStateContext);
   const [gids, setGids] = useState<string | undefined>(businessGroup.ids);
@@ -342,11 +343,18 @@ const Application: React.FC = () => {
   const [showLineChart, setShowLineChart] = useState(false);
   const [alertLineData,setalertLineData] = useState([]);
   const [alertTableData,setalertTableData] = useState([]);
+  const [appTitle,setAppTitle] = useState('');
+  
   const [timesrange_7d, setTimerange_7d] = useState<{ start: number, end: number }>({ start: 0, end: 0 });
 
   useEffect(() => {
-    if (gids === undefined) {
+    if (gids === undefined || gids === '0') {
+      setAppTitle('机器列表')
       return; 
+    }
+    setShowLineChart(true)
+    if(gids === undefined || gids === '0'){
+      setShowLineChart(false)
     }
     //获取7天的时间范围
     const { start, end } = getTimesRange(7,0,0);
@@ -376,6 +384,11 @@ const Application: React.FC = () => {
       }      
       //console.log("res2:",res)
       setalertTableData(res);
+    });
+
+    //获取机器列表
+    getMonObjectList({gids:gids}).then((res) => {
+      setAppTitle(res.dat.list[0].group_obj.name)
     });
         
   }, [gids]);
@@ -407,14 +420,14 @@ const Application: React.FC = () => {
     },
   ];
   return (
-    <PageLayout icon={<DatabaseOutlined />} title={t('title')}>
+    <PageLayout icon={<DatabaseOutlined />} title={appTitle}>
       <div className='object-manage-page-content'>
-      <BusinessGroup2
+      {/* <BusinessGroup2
           showSelected={gids !== '0' && gids !== undefined}
           renderHeadExtra={() => {
             return (
               <div>
-                <div className='n9e-biz-group-container-group-title'>{t('default_filter')}</div>
+                
                 <div
                   className={classNames({
                     'n9e-biz-group-item': true,
@@ -447,7 +460,7 @@ const Application: React.FC = () => {
             setGids(ids);
             setShowLineChart(true);
           }}
-        />
+        /> */}
         <div
           className='table-area n9e-border-base'
           style={{

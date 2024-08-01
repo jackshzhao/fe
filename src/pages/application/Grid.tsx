@@ -12,7 +12,7 @@ const Grid = ({ charts }) => {
   };
 
   useEffect(() => {
-    console.log("charts:",charts)
+    //console.log("charts:",charts)
     const handleResize = () => {
       charts.forEach((_, index) => {
         const chartElement = document.getElementById(`chart-${index}`);
