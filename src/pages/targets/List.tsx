@@ -3,6 +3,7 @@ import { Table, Tag, Tooltip, Space, Input, Dropdown, Menu, Button, Modal, messa
 import { ColumnsType } from 'antd/es/table';
 import { SearchOutlined, DownOutlined, ReloadOutlined, CopyOutlined, ApartmentOutlined, InfoCircleOutlined, EyeOutlined } from '@ant-design/icons';
 import { useAntdTable } from 'ahooks';
+import {Link} from 'react-router-dom'
 import _ from 'lodash';
 import moment from 'moment';
 import { useTranslation, Trans } from 'react-i18next';
@@ -140,23 +141,15 @@ export default function List(props: IProps) {
       ),
       dataIndex: 'ident',
       className: 'n9e-hosts-table-column-ident',
-      render: (text, record) => {
-        return (
-          <Space>
-            <TargetMetaDrawer ident={text} />
-            {import.meta.env['VITE_IS_PRO'] && (
-              <Tooltip title='查看关联采集配置'>
-                <ApartmentOutlined
-                  onClick={() => {
-                    setCollectsDrawerVisible(true);
-                    setCollectsDrawerIdent(text);
-                  }}
-                />
-              </Tooltip>
-            )}
-          </Space>
-        );
-      },
+      render: (text, record) => { 
+        let dashboardID = 6;  
+        if(record.os === 'windows'){
+          dashboardID = 7;
+        }    
+        return(
+          <Link to={`/dashboard/${dashboardID}?ident=${text}&prom=1`} >{text}</Link>
+        )
+      }
     },
   ];
 

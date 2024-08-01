@@ -24,6 +24,7 @@ const appDashboard: React.FC = () => {
   const [appList, setAppList] = useState<any[]>([]);
   const [appListTotal, setAppListTotal] = useState(0);
   const [appHealthData,setappHealthData] = useState([]);
+  const [importantApp, setImportantApp] = useState([])
   const [timesrange_30d, setTimerange_30d] = useState<{ start: number, end: number }>({ start: 0, end: 0 });
   const [linkId,setLinkId] = useState(1);
   const [loading, setLoading] = useState<boolean>(true);
@@ -45,6 +46,7 @@ const appDashboard: React.FC = () => {
     let abnormalCount = 0;
     //所有应用、核心应用、可用性、应用告警统计
     getAppHealth().then((res) => {
+      let IApp = [] as any
       //console.log("setAppList:",res)
       setAppList(res);
       setAppListTotal(res.length)
@@ -57,12 +59,17 @@ const appDashboard: React.FC = () => {
         }else{
           abnormalCount++;
         }
+        if(res[i].grade == 2){
+          IApp.push(res[i])
+        }
       }
       setappStatisticData([
         ['健康', healthCount],
         ['亚健康', subHealthCount],
         ['异常', abnormalCount],
-      ]);          
+      ]); 
+      console.log(`IApp:${IApp}`)
+      setImportantApp(IApp)         
     });
 
     //应用健康度统计
@@ -88,7 +95,7 @@ const columnList = [
       // render: (text: string, record: application) => <Link to={`/system/${record.name}`}>{text}</Link>,
       render: (text, record) => {        
         return(
-          <Link to={`/application-details?ids=${record.id}&isLeaf=true`} >{text}</Link>
+          <Link to={`/application-details?ids=${record.id}&isLeaf=true&names=${record.name}`} >{text}</Link>
         )
       }
       
@@ -138,7 +145,7 @@ const getStatusColor = (health: number): 'success' | 'normal' | 'exception' => {
         <div style={{position: 'relative',  height: '50%',border: '1px solid #ccc',margin: '0px 10px 10px 0px' }}>
           <h4 style={{textAlign: 'center'}}>院级核心应用</h4>
           <div style={{height:'100%',width:'100%',position: 'absolute',top: '5%', left: '5%',}}>
-            <Grid charts={appList} /> 
+            <Grid charts={importantApp} /> 
           </div>            
           
         </div>

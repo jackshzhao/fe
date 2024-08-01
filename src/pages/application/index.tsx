@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback, useContext } from 'react';
 import { Modal, Tag, Form, Input, Alert, Select, Tooltip,Table } from 'antd';
-import { DatabaseOutlined } from '@ant-design/icons';
+import { DatabaseOutlined, ArrowLeftOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import _, { debounce } from 'lodash';
 import classNames from 'classnames';
@@ -9,6 +9,7 @@ import PageLayout from '@/components/pageLayout';
 import { getBusiGroups } from '@/services/common';
 import {getMonObjectList} from '@/services/targets'
 import { CommonStateContext } from '@/App';
+import { useLocation } from 'react-router-dom';
 
 
 import AlertLineChart from './AlertLineChart';
@@ -335,7 +336,7 @@ const OperationModal: React.FC<OperateionModalProps> = ({ operateType, setOperat
 const Application: React.FC = (props) => {
   const {t} = useTranslation("applications");
   const { businessGroup } = useContext(CommonStateContext);
-  const [gids, setGids] = useState<string | undefined>(businessGroup.ids);
+  //const [gids, setGids] = useState<string | undefined>(businessGroup.ids);
   const [operateType, setOperateType] = useState<OperateType>(OperateType.None);
   const [selectedRowKeys, setSelectedRowKeys] = useState<(string | number)[]>([]);
   const [selectedIdents, setSelectedIdents] = useState<string[]>([]);
@@ -343,19 +344,23 @@ const Application: React.FC = (props) => {
   const [showLineChart, setShowLineChart] = useState(false);
   const [alertLineData,setalertLineData] = useState([]);
   const [alertTableData,setalertTableData] = useState([]);
-  const [appTitle,setAppTitle] = useState('');
+  //const [appTitle,setAppTitle] = useState('');
+  
+   
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const ids = queryParams.get('ids');
+  const gids:string = ids ?? '0';
+  const names = queryParams.get('names')
+  const appTitle:string = names ?? ' '
+    
   
   const [timesrange_7d, setTimerange_7d] = useState<{ start: number, end: number }>({ start: 0, end: 0 });
 
   useEffect(() => {
-    if (gids === undefined || gids === '0') {
-      setAppTitle('机器列表')
-      return; 
-    }
+    
     setShowLineChart(true)
-    if(gids === undefined || gids === '0'){
-      setShowLineChart(false)
-    }
+    
     //获取7天的时间范围
     const { start, end } = getTimesRange(7,0,0);
     //console.log(`start1${start}, end1${end} `)
@@ -387,9 +392,9 @@ const Application: React.FC = (props) => {
     });
 
     //获取机器列表
-    getMonObjectList({gids:gids}).then((res) => {
-      setAppTitle(res.dat.list[0].group_obj.name)
-    });
+    // getMonObjectList({gids:gids}).then((res) => {
+    //   setAppTitle(res.dat.list[0].group_obj.name)
+    // });
         
   }, [gids]);
 
@@ -420,7 +425,7 @@ const Application: React.FC = (props) => {
     },
   ];
   return (
-    <PageLayout icon={<DatabaseOutlined />} title={appTitle}>
+    <PageLayout showBack backPath='/applications' title={appTitle}>
       <div className='object-manage-page-content'>
       {/* <BusinessGroup2
           showSelected={gids !== '0' && gids !== undefined}
