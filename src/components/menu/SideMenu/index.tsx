@@ -26,17 +26,18 @@ export const getMenuList = (t) => {
   const menuList = [
     {
       key: 'applications',
-      icon: <IconFont type='icon-Menu_Infrastructure' />,
-      label: t('应用视图'),
+      icon: <IconFont type='icon-IndexManagement1' />,
+      
+      label: t('监控大屏'),
       children: [
         {
           key: '/applications',
-          label: t('应用大屏'),
+          label: t('应用视图'),
         },
-        // {
-        //   key: '/application-details',
-        //   label: t('应用详情'),
-        // },
+        {
+          key: '/dashboards/1',
+          label: t('设备视图'),
+        },
       ],
     },
     {
@@ -54,24 +55,23 @@ export const getMenuList = (t) => {
         },
       ],
     },
-    
     {
       key: 'metric',
-      icon: <IconFont type='icon-IndexManagement1' />,
-      label: t('时序指标'),
+      icon: <IconFont type='icon-Menu_Search' />,
+      label: t('指标查询'),
       children: [
-        {
-          key: '/metric/explorer',
-          label: t('即时查询'),
-        },
-        {
-          key: '/metrics-built-in',
-          label: t('metricsBuiltin:title'),
-        },
         {
           key: '/object/explorer',
           label: t('快捷视图'),
         },
+        {
+          key: '/metric/explorer',
+          label: t('即时查询'),
+        },
+        // {
+        //   key: '/metrics-built-in',
+        //   label: t('metricsBuiltin:title'),
+        // },
         {
           key: '/recording-rules',
           label: t('记录规则'),

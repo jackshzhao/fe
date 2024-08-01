@@ -237,7 +237,7 @@ export default function Content() {
           <RouteWithSubRoutes key={i} {...route} />
         ))}
         <Route path='/' exact>
-          <Redirect to={siteInfo?.home_page_url || '/metric/explorer'} />
+          <Redirect to={siteInfo?.home_page_url || '/applications'} />
         </Route>
         <Route path='/403' component={Page403} />
         <Route path='/404' component={NotFound} />
