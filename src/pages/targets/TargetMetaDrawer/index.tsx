@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Drawer, Tag } from 'antd';
+import { Drawer, Tag, Button } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { Tooltip, Space } from 'antd';
 import { DownOutlined, RightOutlined, CopyOutlined } from '@ant-design/icons';
@@ -180,7 +180,7 @@ export default function TargetMetaDrawer(props: IProps) {
   return (
     <>
       <Tooltip title={t('meta_tip')}>
-        <a
+      <Button type="primary" size='small'
           onClick={() => {
             setVisible(true);
             getTargetInformationByIdent(ident).then((res) => {
@@ -188,8 +188,8 @@ export default function TargetMetaDrawer(props: IProps) {
             });
           }}
         >
-          {ident}
-        </a>
+          查看
+        </Button>
       </Tooltip>
       <Drawer
         destroyOnClose

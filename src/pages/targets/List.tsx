@@ -83,6 +83,7 @@ export default function List(props: IProps) {
   const [collectsDrawerIdent, setCollectsDrawerIdent] = useState('');
   const [downtime, setDowntime] = useState();
   const [agentVersions, setAgentVersions] = useState<string>();
+  
   const { darkMode } = useContext(CommonStateContext);
   const LOST_COLOR = darkMode ? LOST_COLOR_DARK : LOST_COLOR_LIGHT;
   const columns: ColumnsType<any> = [
@@ -147,7 +148,7 @@ export default function List(props: IProps) {
           dashboardID = 7;
         }    
         return(
-          <Link to={`/dashboard/${dashboardID}?ident=${text}&prom=1`} >{text}</Link>
+          <Link to={`/dashboard/${dashboardID}?ident=${text}&prom=1&gids=${gids}&title=${record.group_obj.name}&showHeader=false&isTarget=true`} >{text}</Link>
         )
       }
     },
@@ -155,6 +156,31 @@ export default function List(props: IProps) {
 
   _.forEach(columnsConfigs, (item) => {
     if (!item.visible) return;
+    if(item.name === 'actions'){
+      columns.push({
+        title: t('actions'),
+        key: 'actions',
+        render: (text, record) => {
+          
+          return(
+            <Space>
+              <TargetMetaDrawer ident={record.ident} />
+              {import.meta.env['VITE_IS_PRO'] && (
+              <Tooltip title='查看关联采集配置'>
+                <ApartmentOutlined
+                  onClick={() => {
+                    setCollectsDrawerVisible(true);
+                    setCollectsDrawerIdent(text);
+                  }}
+                />
+              </Tooltip>
+            )}
+            </Space>
+          )
+          
+        }
+      });
+    }
     if (item.name === 'host_ip') {
       columns.push({
         title: t('host_ip'),

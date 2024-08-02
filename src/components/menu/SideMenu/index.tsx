@@ -45,6 +45,10 @@ export const getMenuList = (t) => {
       icon: <IconFont type='icon-Menu_Dashboard' />,
       label: t('仪表盘'),
       children: [
+        // {
+        //   key: '/appdashboards',
+        //   label: t('应用仪表盘'),
+        // },
         {
           key: '/dashboards',
           label: t('监控仪表盘'),
@@ -146,23 +150,27 @@ export const getMenuList = (t) => {
         },
       ],
     },
-    {
-      key: 'targets',
-      icon: <IconFont type='icon-Menu_Infrastructure' />,
-      label: t('基础设施'),
-      children: [
-        {
-          key: '/targets',
-          label: t('监控机器'),
-        },
-      ],
-    },
+    // {
+    //   key: 'targets',
+    //   icon: <IconFont type='icon-Menu_Infrastructure' />,
+    //   label: t('基础设施'),
+    //   children: [
+    //     {
+    //       key: '/targets',
+    //       label: t('主机管理'),
+    //     },
+    //   ],
+    // },
    
     {
       key: 'manage',
       icon: <IconFont type='icon-Menu_PersonnelOrganization' />,
-      label: t('人员组织'),
+      label: t('系统管理'),
       children: [
+        {
+          key: '/targets',
+          label: t('主机管理'),
+        },
         {
           key: '/users',
           label: t('用户管理'),

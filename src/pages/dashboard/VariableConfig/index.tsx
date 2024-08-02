@@ -60,6 +60,10 @@ function index(props: IProps) {
   const [data, setData] = useState<IVariable[]>([]);
   const dataWithoutConstant = _.filter(data, (item) => item.type !== 'constant');
   const [refreshFlag, setRefreshFlag] = useState<string>(_.uniqueId('refreshFlag_'));
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const showHeader = queryParams.get('showHeader') || 'true';
+  
   const value = _.map(props.value, (item) => {
     return {
       ...item,
@@ -246,35 +250,38 @@ function index(props: IProps) {
     <div className='tag-area'>
       <div className={classNames('tag-content', 'tag-content-close')}>
         {_.map(dataWithoutConstant, (item) => {
-          return (
-            <DisplayItem
-              key={item.name}
-              expression={item}
-              value={item.value}
-              onChange={(val) => {
-                // 缓存变量值，更新 url 里的变量值
-                setVaraiableSelected({
-                  name: item.name,
-                  value: val,
-                  id,
-                  urlAttach: true,
-                  vars: dataWithoutConstant,
-                });
-                setData(
-                  _.map(data, (subItem) => {
-                    if (subItem.name === item.name) {
-                      return {
-                        ...item,
-                        value: val,
-                      };
-                    }
-                    return subItem;
-                  }),
-                );
-                setRefreshFlag(_.uniqueId('refreshFlag_'));
-              }}
-            />
-          );
+          if(showHeader !== 'false'){
+            return (
+              <DisplayItem
+                key={item.name}
+                expression={item}
+                value={item.value}
+                onChange={(val) => {
+                  // 缓存变量值，更新 url 里的变量值
+                  setVaraiableSelected({
+                    name: item.name,
+                    value: val,
+                    id,
+                    urlAttach: true,
+                    vars: dataWithoutConstant,
+                  });
+                  setData(
+                    _.map(data, (subItem) => {
+                      if (subItem.name === item.name) {
+                        return {
+                          ...item,
+                          value: val,
+                        };
+                      }
+                      return subItem;
+                    }),
+                  );
+                  setRefreshFlag(_.uniqueId('refreshFlag_'));
+                }}
+              />
+            );
+          }
+          
         })}
         {renderBtns()}
       </div>

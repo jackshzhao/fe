@@ -15,6 +15,7 @@ const zh_CN = {
   target_up: '状态',
   mem_util: '内存',
   cpu_util: 'CPU',
+  actions: '操作',
   cpu_num: '核数',
   offset: '时间偏移',
   offset_tip: '计算逻辑为用 服务端部署机器的时间减去探针部署机器的时间',

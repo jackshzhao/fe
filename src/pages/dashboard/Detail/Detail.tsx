@@ -117,7 +117,9 @@ const getDefaultTimeRange = (id, query, dashboardDefaultRangeIndex?) => {
 };
 
 export default function DetailV2(props: IProps) {
-  const { isPreview = false, isBuiltin = false, gobackPath, builtinParams } = props;
+  const { isPreview = false, isBuiltin = false,builtinParams, gobackPath} = props;
+  
+  //const gobackPath = '/application-details?ids=2&isLeaf=true&names=ITIL系统'
   const { t, i18n } = useTranslation('dashboard');
   const history = useHistory();
   const { datasourceList, profile, dashboardDefaultRangeIndex, dashboardSaveMode, perms, groupedDatasourceList } = useContext(CommonStateContext);

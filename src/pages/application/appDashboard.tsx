@@ -27,8 +27,6 @@ const appDashboard: React.FC = () => {
   const [importantApp, setImportantApp] = useState([])
   const [timesrange_30d, setTimerange_30d] = useState<{ start: number, end: number }>({ start: 0, end: 0 });
   const [linkId,setLinkId] = useState(1);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
   const [appStatisticData,setappStatisticData]=useState<[string, number][]>([
     ['健康', 0],
     ['亚健康', 0],
@@ -101,7 +99,7 @@ const columnList = [
       
   },
   {
-      title: '健康值',
+      title:  <div style={{ textAlign: 'right' }}>健康值</div>,
       dataIndex: 'health_level',
       key: 'health_level',
       render: (health_level: number) => (

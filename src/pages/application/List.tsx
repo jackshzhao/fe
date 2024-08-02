@@ -54,6 +54,8 @@ interface ITargetProps {
 
 interface IProps {
   gids?: string;
+  appTitle?: string;
+  
   selectedIdents: string[];
   setSelectedIdents: (selectedIdents: string[]) => void;
   selectedRowKeys: any[];
@@ -76,7 +78,7 @@ const Unknown = () => {
 
 export default function List(props: IProps) {
   const { t } = useTranslation('applications');
-  const { gids, selectedIdents, setSelectedIdents, selectedRowKeys, setSelectedRowKeys, refreshFlag, setRefreshFlag, setOperateType } = props;
+  const { gids, appTitle,selectedIdents, setSelectedIdents, selectedRowKeys, setSelectedRowKeys, refreshFlag, setRefreshFlag, setOperateType } = props;
   const isAddTagToQueryInput = useRef(false);
   const [searchVal, setSearchVal] = useState('');
   const [tableQueryContent, setTableQueryContent] = useState<string>('');
@@ -147,9 +149,9 @@ export default function List(props: IProps) {
         let dashboardID = 6;  
         if(record.os === 'windows'){
           dashboardID = 7;
-        }    
+        } 
         return(
-          <Link to={`/dashboard/${dashboardID}?ident=${text}&prom=1`} >{text}</Link>
+          <Link to={`/dashboard/${dashboardID}?ident=${text}&prom=1&gids=${gids}&title=${appTitle}&showHeader=false`} >{text}</Link>
         )
       }
     },

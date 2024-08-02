@@ -350,9 +350,9 @@ const Application: React.FC = (props) => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const ids = queryParams.get('ids');
-  const gids:string = ids ?? '0';
+  const gids:string = ids || '0';
   const names = queryParams.get('names')
-  const appTitle:string = names ?? ' '
+  const appTitle:string = names || ' '
     
   
   const [timesrange_7d, setTimerange_7d] = useState<{ start: number, end: number }>({ start: 0, end: 0 });
@@ -395,6 +395,12 @@ const Application: React.FC = (props) => {
     // getMonObjectList({gids:gids}).then((res) => {
     //   setAppTitle(res.dat.list[0].group_obj.name)
     // });
+    // if(localStorage.getItem(gids)){
+    //   localStorage.removeItem('gids')
+    //   localStorage.removeItem('appTitle') 
+    //   localStorage.removeItem('showHeader') 
+    // }
+    
         
   }, [gids]);
 
@@ -475,6 +481,7 @@ const Application: React.FC = (props) => {
         >
           <List
             gids={gids}
+            appTitle={appTitle}
             selectedIdents={selectedIdents}
             setSelectedIdents={setSelectedIdents}
             selectedRowKeys={selectedRowKeys}
