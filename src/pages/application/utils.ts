@@ -75,3 +75,12 @@ export const getTimesRange = (days: number,hours: number,minutes: number): { sta
 };
 
 
+export const getTopUsability = (data) => {
+  // 1. 根据usability从小到大排序
+  const sortedData = data.sort((a, b) => a.usability - b.usability);
+  
+  // 2. 返回前10个系统
+  return sortedData.slice(0, 8);
+};
+
+

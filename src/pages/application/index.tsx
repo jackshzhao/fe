@@ -374,6 +374,9 @@ const Application: React.FC = (props) => {
     });
 
     getAlertTable(gids).then((res) => {
+      if(res === null){
+        return
+      }
       for(var i = 0; i < res.length; i++){
         res[i].first_trigger_time = formatTimesHour(res[i].first_trigger_time)
         res[i].trigger_time = formatTimesHour(res[i].trigger_time)

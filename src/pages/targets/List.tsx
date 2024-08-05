@@ -148,7 +148,7 @@ export default function List(props: IProps) {
           dashboardID = 7;
         }    
         return(
-          <Link to={`/dashboard/${dashboardID}?ident=${text}&prom=1&gids=${gids}&title=${record.group_obj.name}&showHeader=false&isTarget=true`} >{text}</Link>
+          <Link to={`/dashboard/${dashboardID}?ident=${text}&prom=1&gids=${gids}&showHeader=false&isTarget=true`} >{text}</Link>
         )
       }
     },

@@ -84,10 +84,7 @@ export default function Title(props: IProps) {
   const [panelClipboard, setPanelClipboard] = useGlobalState('panelClipboard');
 
   
-  const queryParams = new URLSearchParams(location.search);  
-  const gids:string = queryParams.get('gids') || '0';
-  const showHeader = queryParams.get('showHeader')
-  const appTitle:string = queryParams.get('title') || ' '
+ 
 
   useEffect(() => {
     document.title = `${dashboard.name} - ${siteInfo?.page_title || cachePageTitle}`;
@@ -177,14 +174,14 @@ export default function Title(props: IProps) {
             }}
             overlay={
               <div className='collects-payloads-dropdown-overlay p2 n9e-fill-color-2 n9e-border-base n9e-border-radius-base n9e-base-shadow'>
-                {/* <Input
+                <Input
                   className='mb1'
                   placeholder={t('common:search_placeholder')}
                   value={dashboardListDropdownSearch}
                   onChange={(e) => {
                     setDashboardListDropdownSearch(e.target.value);
                   }}
-                /> */}
+                />
                 <Menu>
                   {_.map(
                     _.filter(dashboardList, (item) => {

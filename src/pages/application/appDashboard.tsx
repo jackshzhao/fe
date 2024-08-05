@@ -1,5 +1,5 @@
 import React ,{useState, useEffect}from 'react'
-import { Card, Row, Col, Statistic, Button,Progress } from 'antd';
+import { Card, Row, Col, Statistic, Button,Progress, Space, Tooltip } from 'antd';
 import { Layout,Table } from 'antd';
 import {Link} from 'react-router-dom';
 import BarChart from './BarChart';
@@ -14,7 +14,9 @@ import './appDashboard.less'
 import { transform } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import {getAppHealth,getAppHealthList} from '@/services/application'
-import {formatTimesHour,formatTimeDay,getTimesRange} from './utils'
+import {formatTimesHour,formatTimeDay,getTimesRange, getTopUsability} from './utils'
+import { InfoCircleOutlined } from '@ant-design/icons';
+import { text } from 'd3';
 
 const { Sider, Content, Footer } = Layout;
 const appDashboard: React.FC = () => {
@@ -25,6 +27,7 @@ const appDashboard: React.FC = () => {
   const [appListTotal, setAppListTotal] = useState(0);
   const [appHealthData,setappHealthData] = useState([]);
   const [importantApp, setImportantApp] = useState([])
+  const [topUsabilityApp, setTopUsabilityApp] = useState([])
   const [timesrange_30d, setTimerange_30d] = useState<{ start: number, end: number }>({ start: 0, end: 0 });
   const [linkId,setLinkId] = useState(1);
   const [appStatisticData,setappStatisticData]=useState<[string, number][]>([
@@ -66,8 +69,10 @@ const appDashboard: React.FC = () => {
         ['亚健康', subHealthCount],
         ['异常', abnormalCount],
       ]); 
-      console.log(`IApp:${IApp}`)
-      setImportantApp(IApp)         
+      setImportantApp(IApp)
+      
+      //排序并返回前十
+      setTopUsabilityApp(getTopUsability(res))
     });
 
     //应用健康度统计
@@ -178,8 +183,15 @@ const getStatusColor = (health: number): 'success' | 'normal' | 'exception' => {
       </div>
       <div className="flex-col-item" >
         <div style={{ height: '50%', border: '1px solid #ccc',margin: '0px 10px 10px 0px' }}>
-          <h4 style={{textAlign: 'center'}}>应用可用性</h4>          
-          <BarChart data={appList}/>  
+        
+          <h4 style={{textAlign: 'center'}}>应用可用性
+            <Tooltip title={'应用可用性计算公式为：'}>
+              <InfoCircleOutlined />
+            </Tooltip>
+          </h4>
+          
+                   
+          <BarChart data={topUsabilityApp}/>  
         </div>
         <div style={{ position: 'relative', height: '50%', border: '1px solid #ccc',margin: '0px 10px 0px 0px'}}>
           

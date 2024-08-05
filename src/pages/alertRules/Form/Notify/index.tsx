@@ -90,7 +90,7 @@ export default function index({ disabled }) {
             display: notifyTargetCollapsed ? 'none' : 'block',
           }}
         >
-          <Form.Item
+          {/* <Form.Item
             label={
               <Space>
                 {t('notify_channels')}
@@ -110,7 +110,7 @@ export default function index({ disabled }) {
                 );
               })}
             </Checkbox.Group>
-          </Form.Item>
+          </Form.Item> */}
           <NotifyChannelsTpl contactList={contactList} notify_channels={notify_channels} name={['extra_config', 'custom_notify_tpl']} />
           <Form.Item label={t('notify_groups')} name='notify_groups'>
             <Select mode='multiple' showSearch optionFilterProp='children'>
