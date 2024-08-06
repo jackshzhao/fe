@@ -185,7 +185,7 @@ const getStatusColor = (health: number): 'success' | 'normal' | 'exception' => {
         <div style={{ height: '50%', border: '1px solid #ccc',margin: '0px 10px 10px 0px' }}>
         
           <h4 style={{textAlign: 'center'}}>应用可用性
-            <Tooltip title={'应用可用性计算公式为：'}>
+            <Tooltip title={'服务等级协议(SLA)应用可用性 = 1 - (应用异常时间*0.6)/1月1日至今时间'}>
               <InfoCircleOutlined />
             </Tooltip>
           </h4>

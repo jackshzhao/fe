@@ -168,10 +168,6 @@ export const getMenuList = (t) => {
       label: t('系统管理'),
       children: [
         {
-          key: '/targets',
-          label: t('主机管理'),
-        },
-        {
           key: '/users',
           label: t('用户管理'),
         },
@@ -182,6 +178,10 @@ export const getMenuList = (t) => {
         {
           key: '/busi-groups',
           label: t('业务组管理'),
+        },
+        {
+          key: '/targets',
+          label: t('主机管理'),
         },
         {
           key: '/permissions',
