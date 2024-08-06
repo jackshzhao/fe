@@ -186,7 +186,18 @@ function index(props: IProps) {
                   </Space>
                 }
               >
-                <div className='renderer-header-desc'>{description ? <InfoCircleOutlined /> : <LinkOutlined />}</div>
+                <div className='renderer-header-desc'>{description ? <InfoCircleOutlined /> : <Space direction='vertical'>
+                    {description ? <Markdown content={description} /> : null}
+                    {_.map(values.links, (link, i) => {
+                      return (
+                        <div key={i}>
+                          <a href={replaceFieldWithVariable(dashboardId, link.url, variableConfig, values.scopedVars)} target={link.targetBlank ? '_blank' : '_self'}>
+                            <LinkOutlined />
+                          </a>
+                        </div>
+                      );
+                    })}
+                  </Space>}</div>
               </Tooltip>
             ) : null}
           </div>
