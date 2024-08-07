@@ -165,7 +165,7 @@ const Chart: React.FC<ChartProps> = ({ data }) => {
           show: true,
           position: "top",
           formatter: '{c}%',
-          color: "#fff",
+          color: 'black',
           fontSize: 12,
           textAlign: "center",
         },

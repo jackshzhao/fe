@@ -154,7 +154,7 @@ const getStatusColor = (health: number): 'success' | 'normal' | 'exception' => {
         </div>
         <div style={{ height: '50%', border: '1px solid #ccc' ,margin: '0px 10px 0px 0px',}}>
           <h4 style={{textAlign: 'center'}}>应用健康度统计</h4>
-            <AlertLineChart data={appHealthData} ystep={2} ymax={8}/>
+            <AlertLineChart data={appHealthData} ystep={5} ymax={60}/>
         </div>
       </div>
       <div className="flex-col-item">
