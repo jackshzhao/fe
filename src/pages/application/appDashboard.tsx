@@ -98,7 +98,9 @@ const columnList = [
       // render: (text: string, record: application) => <Link to={`/system/${record.name}`}>{text}</Link>,
       render: (text, record) => {        
         return(
-          <Link to={`/application-details?ids=${record.id}&isLeaf=true&names=${record.name}`} >{text}</Link>
+          <Tooltip title={'查看应用详情'}>
+            <Link to={`/application-details?ids=${record.id}&isLeaf=true&names=${record.name}`} >{text}</Link>
+          </Tooltip>
         )
       }
       

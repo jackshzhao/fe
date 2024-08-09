@@ -52,6 +52,7 @@ const zh_CN = {
     status: '状态',
     enabled: '启用',
     note: '备注',
+    weight: '权重',
     operations: '操作',
     total: '共 {{total}} 条',
   },

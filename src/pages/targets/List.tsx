@@ -33,6 +33,7 @@ enum OperateType {
   BindTag = 'bindTag',
   UnbindTag = 'unbindTag',
   UpdateBusi = 'updateBusi',
+  UpdateWeigth = 'updateWeight',
   RemoveBusi = 'removeBusi',
   UpdateNote = 'updateNote',
   Delete = 'delete',
@@ -348,6 +349,88 @@ export default function List(props: IProps) {
         },
       });
     }
+
+    //节点健康度
+    if (item.name === 'health_level') {
+      columns.push({
+        title: (t('health_level')),
+        width: 100,
+        dataIndex: 'health_level',
+        sorter: (a, b) => a.offset - b.offset,
+        render(text, reocrd) {
+          let backgroundColor = RED_COLOR;
+          if (Math.abs(text) >60 ) {
+            backgroundColor = YELLOW_COLOR;
+          }
+          if (Math.abs(text) >90) {
+            backgroundColor = GREEN_COLOR;
+          }
+          if (reocrd.target_up === 0) {
+            backgroundColor = LOST_COLOR;
+          }
+          return (
+            <div
+              className='table-td-fullBG'
+              style={{
+                backgroundColor: backgroundColor,
+              }}
+            >
+              {text}
+            </div>
+          );
+        },
+      });
+    }
+    //告警数
+    if (item.name === 'alert_num') {
+      columns.push({
+        title: (t('alert_num')),
+        width: 100,
+        dataIndex: 'alert_num',
+        sorter: (a, b) => a.offset - b.offset,
+        render(text, reocrd) {
+          let backgroundColor = GREEN_COLOR;
+          if (Math.abs(text) >0 ) {
+            backgroundColor = YELLOW_COLOR;
+          }
+          return (
+            <div
+              className='table-td-fullBG'
+              style={{
+                backgroundColor: backgroundColor,
+              }}
+            >
+              {text}
+            </div>
+          );
+        },
+      });
+    }
+    //权重    
+    if (item.name === 'weight') {
+      columns.push({
+        title: t('weight'),
+        dataIndex: 'weight',
+        className: 'n9e-hosts-table-column-ip',
+        render(text, reocrd) {
+          
+          if (Math.abs(text) ===1 ) {
+            text = '关键节点';
+          }
+          if (Math.abs(text) === 0) {
+            text = '普通节点';
+          }
+          
+          return (
+            <div
+              className='n9e-hosts-table-column-ip'
+            >
+              {text}
+            </div>
+          );
+        },
+      });
+    }
     if (item.name === 'os') {
       columns.push({
         title: t('os'),
@@ -540,6 +623,7 @@ export default function List(props: IProps) {
                 <Menu.Item key={OperateType.UnbindTag}>{t('unbind_tag.title')}</Menu.Item>
                 <Menu.Item key={OperateType.UpdateBusi}>{t('update_busi.title')}</Menu.Item>
                 <Menu.Item key={OperateType.RemoveBusi}>{t('remove_busi.title')}</Menu.Item>
+                <Menu.Item key={OperateType.UpdateWeigth}>{t('update_weight.title')}</Menu.Item>
                 <Menu.Item key={OperateType.UpdateNote}>{t('update_note.title')}</Menu.Item>
                 <Menu.Item key={OperateType.Delete}>{t('batch_delete.title')}</Menu.Item>
                 <UpgradeAgent

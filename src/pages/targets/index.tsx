@@ -20,7 +20,7 @@ import { DatabaseOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import _, { debounce } from 'lodash';
 import classNames from 'classnames';
-import { bindTags, unbindTags, moveTargetBusi, updateTargetNote, deleteTargets, getTargetTags } from '@/services/targets';
+import { bindTags, unbindTags, moveTargetBusi, updateTargetNote, deleteTargets, getTargetTags, updateTargetWeight } from '@/services/targets';
 import PageLayout from '@/components/pageLayout';
 import { getBusiGroups } from '@/services/common';
 import { CommonStateContext } from '@/App';
@@ -36,6 +36,7 @@ enum OperateType {
   BindTag = 'bindTag',
   UnbindTag = 'unbindTag',
   UpdateBusi = 'updateBusi',
+  UpdateWeigth = 'updateWeight',
   RemoveBusi = 'removeBusi',
   UpdateNote = 'updateNote',
   Delete = 'delete',
@@ -221,6 +222,24 @@ const OperationModal: React.FC<OperateionModalProps> = ({ operateType, setOperat
     };
   };
 
+  // 修改权重弹窗内容
+  const updateWeightDetail = () => {
+    return {
+      operateTitle: t('update_weight.title'),
+      requestFunc: updateTargetWeight,
+      isFormItem: true,
+      render() {
+        return (
+          <Form.Item label={t('common:table.weight')} name='weight'>
+            <Select  showArrow={true} placeholder={'请选择权重'} 
+                      options={[{ label: '普通节点', value: '普通节点' },{ label: '关键节点', value: '关键节点' }]} />
+          </Form.Item>
+        );
+      },
+      
+    };
+  };
+
   const operateDetail = {
     bindTagDetail,
     unbindTagDetail,
@@ -228,6 +247,7 @@ const OperationModal: React.FC<OperateionModalProps> = ({ operateType, setOperat
     removeBusiDetail,
     updateNoteDetail,
     deleteDetail,
+    updateWeightDetail,
     noneDetail: () => ({
       operateTitle: '',
       requestFunc() {

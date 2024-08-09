@@ -83,3 +83,11 @@ export function getTargetList(data) {
     data,
   });
 }
+
+//修改对象权重
+export function updateTargetWeight(data) {
+  return request(`/api/n9e/targets/weight`, {
+    method: RequestMethod.Put,
+    data,
+  })
+}

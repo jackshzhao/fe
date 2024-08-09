@@ -7,7 +7,7 @@ import classNames from 'classnames';
 import { bindTags, unbindTags, moveTargetBusi, updateTargetNote, deleteTargets, getTargetTags } from '@/services/targets';
 import PageLayout from '@/components/pageLayout';
 import { getBusiGroups } from '@/services/common';
-import {getMonObjectList} from '@/services/targets'
+import {getMonObjectList, updateTargetWeight} from '@/services/targets'
 import { CommonStateContext } from '@/App';
 import { useLocation } from 'react-router-dom';
 
@@ -27,6 +27,7 @@ enum OperateType {
   BindTag = 'bindTag',
   UnbindTag = 'unbindTag',
   UpdateBusi = 'updateBusi',
+  UpdateWeigth = 'updateWeight',
   RemoveBusi = 'removeBusi',
   UpdateNote = 'updateNote',
   Delete = 'delete',
@@ -217,6 +218,25 @@ const OperationModal: React.FC<OperateionModalProps> = ({ operateType, setOperat
     };
   };
 
+  // 修改权重弹窗内容
+  const updateWeightDetail = () => {
+    return {
+      operateTitle: t('update_weight.title'),
+      requestFunc: updateTargetWeight,
+      isFormItem: true,
+      render() {
+        return (
+          <Form.Item label={t('common:table.weight')} name='weight'>
+            <Select  showArrow={true} placeholder={'请选择权重'} 
+                      options={[{ label: '普通节点', value: '普通节点' },{ label: '关键节点', value: '关键节点' }]} />
+          </Form.Item>
+        );
+      },
+      
+    };
+  };
+
+
   const operateDetail = {
     bindTagDetail,
     unbindTagDetail,
@@ -224,6 +244,7 @@ const OperationModal: React.FC<OperateionModalProps> = ({ operateType, setOperat
     removeBusiDetail,
     updateNoteDetail,
     deleteDetail,
+    updateWeightDetail,
     noneDetail: () => ({
       operateTitle: '',
       requestFunc() {
@@ -233,6 +254,7 @@ const OperationModal: React.FC<OperateionModalProps> = ({ operateType, setOperat
       render() {},
     }),
   };
+  //模版字符串的方式动态调用函数
   const { operateTitle, requestFunc, isFormItem, render } = operateDetail[`${operateType}Detail`](detailProp);
   const [filteredBusiGroups, setFilteredBusiGroups] = useState(busiGroups);
   function formatValue() {
@@ -254,6 +276,7 @@ const OperationModal: React.FC<OperateionModalProps> = ({ operateType, setOperat
   // 提交表单
   function submitForm() {
     form.validateFields().then((data) => {
+      //console.log(`submitFormdata:${JSON.stringify(data)}`)
       setConfirmLoading(true);
       data.idents = data.idents.split('\n');
       requestFunc(data)

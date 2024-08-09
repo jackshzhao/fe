@@ -18,6 +18,9 @@ const zh_CN = {
   actions: '操作',
   cpu_num: '核数',
   offset: '时间偏移',
+  health_level: '健康度',
+  alert_num: '告警数',
+  weight: '权重',
   offset_tip: '计算逻辑为用 服务端部署机器的时间减去探针部署机器的时间',
   os: '操作系统',
   arch: 'CPU架构',
@@ -69,6 +72,10 @@ const zh_CN = {
   update_note: {
     title: '修改备注',
     placeholder: '内容如果为空，表示清空备注信息',
+  },
+  update_weight: {
+    title: '修改权重',
+    label: '标签',
   },
   batch_delete: {
     title: '批量删除',
