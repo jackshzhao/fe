@@ -183,6 +183,7 @@ function App() {
           }
         }
         document.title = siteInfo?.page_title || '监控平台';
+        //document.title = '监控平台';
         if (iconLink) {
           iconLink.href = siteInfo?.favicon_url || '/image/favicon.ico';
         }

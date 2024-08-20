@@ -36,6 +36,10 @@ const appDashboard: React.FC = () => {
     ['异常', 0],
   ]);
   //院级核心应用数据
+  const importantAppTest = [{name:'1',health_level:70},{name:'2',health_level:80},{name:'3',health_level:90},
+    {name:'4',health_level:90},{name:'5',health_level:90},{name:'6',health_level:90},
+    {name:'4',health_level:90},{name:'5',health_level:90},{name:'6',health_level:90},
+  ]
 
   //院级应用健康列表数据
   useEffect(() => {
@@ -97,10 +101,9 @@ const columnList = [
       key: 'name',
       // render: (text: string, record: application) => <Link to={`/system/${record.name}`}>{text}</Link>,
       render: (text, record) => {        
-        return(
-          <Tooltip title={'查看应用详情'}>
-            <Link to={`/application-details?ids=${record.id}&isLeaf=true&names=${record.name}`} >{text}</Link>
-          </Tooltip>
+        return(          
+          <Link to={`/application-details?ids=${record.id}&isLeaf=true&names=${record.name}`} >{text}</Link>
+         
         )
       }
       
@@ -109,12 +112,14 @@ const columnList = [
       title:  <div style={{ textAlign: 'right' }}>健康值</div>,
       dataIndex: 'health_level',
       key: 'health_level',
-      render: (health_level: number) => (
+      render: (health_level: number,record) => (
+        <Link to={`/application-details?ids=${record.id}&isLeaf=true&names=${record.name}`} >
           <Progress 
             percent={health_level} 
             status={getStatusColor(health_level)} 
             format={(percent) => `${health_level}`} // 自定义显示内容为健康值
           />
+        </Link>
       ),
   },
 ];
@@ -147,31 +152,31 @@ const getStatusColor = (health: number): 'success' | 'normal' | 'exception' => {
   <PageLayout  title={"应用大屏"}>
     <div className="flex-col-container">
       <div className="flex-col-item" >
-        <div style={{position: 'relative',  height: '50%',border: '1px solid #ccc',margin: '0px 10px 10px 0px' }}>
-          <h4 style={{textAlign: 'center'}}>院级核心应用</h4>
-          <div style={{height:'100%',width:'100%',position: 'absolute',top: '5%', left: '5%',}}>
-            <Grid charts={importantApp} /> 
+        <div style={{position: 'relative',  height: '50%',border: '1px solid #ccc',margin: '0px 10px 10px 0px',overflow:'auto',boxSizing:'border-box' }}>
+          <h3 style={{textAlign: 'center'}}>院级常用应用</h3>
+          <div style={{height:'100%',width:'100%',position: 'absolute',top: '5%', left: '5%'}}>
+            <Grid charts={importantAppTest} /> 
           </div>            
           
         </div>
         <div style={{ height: '50%', border: '1px solid #ccc' ,margin: '0px 10px 0px 0px',}}>
-          <h4 style={{textAlign: 'center'}}>应用健康度统计</h4>
-            <AlertLineChart data={appHealthData} ystep={5} ymax={60}/>
+          <h3 style={{textAlign: 'center'}}>健康应用数统计</h3>
+            <AlertLineChart data={appHealthData} ystep={5} ymax={50} Tname={'健康应用'}/>
         </div>
       </div>
       <div className="flex-col-item">
       
-      <div style={{ height: '101%', border: '1px solid #ccc',margin: '0px 10px 10px 0px' ,}}>
-        <h4 style={{textAlign: 'center'}}>院级应用列表</h4>    
+      <div style={{ height: '101%', border: '1px solid #ccc',margin: '0px 10px 10px 0px' ,overflow: 'auto'}}>
+        <h3 style={{textAlign: 'center'}}>院级应用列表</h3>    
           
           <Table
             rowKey={appList=>appList.id}
             dataSource={appList}
             columns={columnList}
             pagination={{total:appListTotal,
-              defaultPageSize:10,
+              defaultPageSize:15,
               showQuickJumper:true,
-              pageSizeOptions:["10","100","1000","2000"], //制定每页显示条数的选项
+              pageSizeOptions:["15","100","1000","2000"], //制定每页显示条数的选项
               showSizeChanger:true,//显示改变每页显示条数的下拉菜单
               locale:{items_per_page:' /页',jump_to:'跳至',page:'页'},
               showTotal: ((appListTotal) => {
@@ -186,18 +191,18 @@ const getStatusColor = (health: number): 'success' | 'normal' | 'exception' => {
       <div className="flex-col-item" >
         <div style={{ height: '50%', border: '1px solid #ccc',margin: '0px 10px 10px 0px' }}>
         
-          <h4 style={{textAlign: 'center'}}>应用可用性
+          <h3 style={{textAlign: 'center'}}>应用可用性
             <Tooltip title={'服务等级协议(SLA)应用可用性 = 1 - (应用异常时间*0.6)/1月1日至今时间'}>
               <InfoCircleOutlined />
             </Tooltip>
-          </h4>
+          </h3>
           
                    
           <BarChart data={topUsabilityApp}/>  
         </div>
         <div style={{ position: 'relative', height: '50%', border: '1px solid #ccc',margin: '0px 10px 0px 0px'}}>
           
-          <h4 style={{textAlign: 'center'}}>应用统计</h4>
+          <h3 style={{textAlign: 'center'}}>应用统计</h3>
           <RoseChart data={appStatisticData}/>
         </div>
       </div>

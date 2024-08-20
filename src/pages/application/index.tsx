@@ -518,12 +518,12 @@ const Application: React.FC = (props) => {
           />
 
           {/* 访问延迟 */}
-          {showLineChart && <h4 style={{textAlign: 'center'}}>应用健康趋势图</h4>}
+          {showLineChart && <h3 style={{textAlign: 'center'}}>应用健康趋势图</h3>}
           {showLineChart && <div style={{height:'280px'}}>
-            <AlertLineChart data={alertLineData} ymax={100} ystep={20}/>
+            <AlertLineChart data={alertLineData} ymax={100} ystep={20} Tname={'应用健康度'}/>
             </div>}
           {/* 告警信息 */}
-          {showLineChart && <h4 style={{textAlign: 'center'}}>告警信息表</h4>}
+          {showLineChart && <h3 style={{textAlign: 'center'}}>告警信息表</h3>}
           {showLineChart &&  
             <Table
                   rowKey={alertTableData=>alertTableData['id']}

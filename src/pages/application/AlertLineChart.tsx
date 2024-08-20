@@ -13,6 +13,7 @@ import {
 import { CanvasRenderer } from 'echarts/renderers';
 import { Smooth } from '@antv/g2/lib/shape/line/smooth';
 import { symbol } from 'd3';
+import { name } from '../alertRules/Form/EventSettings/Relabel';
 
 echarts.use([
   TitleComponent,
@@ -27,10 +28,11 @@ interface ChartProps {
   data: [string, number][];
   ystep: number;
   ymax: number;
+  Tname: string;
 }
 
 
-const Chart: React.FC<ChartProps> = ({ data ,ystep,ymax}) => {
+const Chart: React.FC<ChartProps> = ({ data ,ystep,ymax,Tname}) => {
   const xData = data.map(point => point[0]);
   const yData = data.map(point => point[1]);
 
@@ -50,6 +52,7 @@ const Chart: React.FC<ChartProps> = ({ data ,ystep,ymax}) => {
     },
     series: [
       {
+        name: Tname,
         data: yData,
         type: 'line',
         smooth: 0.6,

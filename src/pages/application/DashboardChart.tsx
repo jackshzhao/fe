@@ -41,7 +41,7 @@ const Chart: React.FC<ChartProps> = ({ data }) => {
             left:'center',
             top: '80%',
             textStyle:{
-              fontSize: 14, // 标题字体大小设置为20
+              fontSize: '14', // 标题字体大小设置为20
               color: "black" // 标题字体颜色设置为黑色
             }}
         ],
