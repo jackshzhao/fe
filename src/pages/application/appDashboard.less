@@ -15,3 +15,26 @@
     height: 50%;
     border-top:4px #cfcccc;/* 可选：为了显示效果添加边框 */
    }
+
+   .alarm-message {
+    height: 50%;
+    border: 1px solid #ccc;
+    margin: 0px 10px 0px 0px;
+    white-space: nowrap;
+    animation: scroll 1s ease-in-out;
+  }
+  
+  @keyframes scroll {
+    0% {
+      transform: translateY(100%);
+      opacity: 0;
+    }
+    50% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(-100%);
+      opacity: 0;
+    }
+  }

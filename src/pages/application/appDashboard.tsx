@@ -8,6 +8,7 @@ import PageLayout from '@/components/pageLayout';
 import SortAppBarChart from './SortAppBarChart';
 import DashboardChart from './DashboardChart'
 import AlertLineChart from './AlertLineChart'
+import RollInformation from './RollInformation'
 import Grid from './Grid';
 import 'antd/dist/antd.css'; 
 import './appDashboard.less'
@@ -160,8 +161,14 @@ const getStatusColor = (health: number): 'success' | 'normal' | 'exception' => {
           
         </div>
         <div style={{ height: '50%', border: '1px solid #ccc' ,margin: '0px 10px 0px 0px',}}>
-          <h3 style={{textAlign: 'center'}}>健康应用数统计</h3>
-            <AlertLineChart data={appHealthData} ystep={5} ymax={50} Tname={'健康应用'}/>
+          <h3 style={{textAlign: 'center'}}>应用告警信息</h3>
+          <div style={{display:'flex',backgroundColor:'rgb(250,250,250)'}}>
+            <div style={{flex: '1',textAlign:'left'}}>应用名称</div>
+            <div style={{flex:'2',textAlign:'center'}}>告警信息</div>
+            <div style={{flex:'1',textAlign:'right'}}>告警时间</div>
+        </div>
+            {/* <AlertLineChart data={appHealthData} ystep={5} ymax={50} Tname={'健康应用'}/> */}
+            <RollInformation />
         </div>
       </div>
       <div className="flex-col-item">

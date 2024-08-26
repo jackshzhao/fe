@@ -49,6 +49,18 @@ export const formatTimesHour = (timestamp: number): string => {
   return `${month}-${day} ${hours}:${minutes}:${seconds}`;
 };
 
+export const formatYearTimesHour = (timestamp: number): string => {
+  const date = new Date(timestamp * 1000); // 将 Unix 时间戳（秒）转换为 JavaScript 时间戳（毫秒）
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 月份从 0 开始，需要加 1
+  const day = date.getDate().toString().padStart(2, '0');
+  const hours = date.getHours().toString().padStart(2, '0');
+  const minutes = date.getMinutes().toString().padStart(2, '0');
+  const seconds = date.getSeconds().toString().padStart(2, '0');
+
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+};
+
 export const formatTimeDay = (timestamp: number): string => {
   const date = new Date(timestamp * 1000); // 将 Unix 时间戳（秒）转换为 JavaScript 时间戳（毫秒）
   const year = date.getFullYear();
@@ -82,5 +94,7 @@ export const getTopUsability = (data) => {
   // 2. 返回前10个系统
   return sortedData.slice(0, 8);
 };
+
+
 
 
