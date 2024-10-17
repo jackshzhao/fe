@@ -54,7 +54,7 @@ export const getEvents = function() {
   return request('api/n9e/alert-cur-events/list', {
     method: RequestMethod.Get,
   }).then((res) => {
-    console.log(`enentData:${res.dat.list}`)
+    //console.log(`enentData:${res.dat.list}`)
     return res.dat.list;
   });
 }

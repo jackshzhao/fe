@@ -21,30 +21,31 @@ echarts.use([
 
 interface ChartProps {
   data: { 
+    id: string;
     name: string; 
     health_level: number; // 纵坐标
   };
 }
 
-const Chart: React.FC<ChartProps> = ({ data }) => {
+const Chart: React.FC<ChartProps> = ({ data}) => {
   const chartRef = useRef<ReactECharts>(null);
 
   const option = {
-    // grid: {
-    //     top: '20%', // 调整顶部间距，使得标题能够显示在图的正下方
-    //     left: 'center', // 居中显示
-    //     right: 'center', // 居中显示
-    //     containLabel: true // 将标签和图表区域包含在内，确保标题可以紧贴图表
-    // },
-    title:[//标题组件，数组里的一个对象表示一个标题
-            {text:data.name,
-            left:'center',
-            top: '80%',
-            textStyle:{
-              fontSize: '14', // 标题字体大小设置为20
-              color: "black" // 标题字体颜色设置为黑色
-            }}
-        ],
+    title: [
+      {
+        text: data.name,
+        left: 'center',
+        top: '80%',
+        textStyle: {
+          fontSize: 14, // 标题字体大小
+          color: "black", // 标题字体颜色
+          fontWeight: 'normal'
+        },
+        // // 添加 link 和 linkTarget
+        // link: `/application-details?ids=${data.id}&isLeaf=true&names=${data.name}`, // 这里替换为你的跳转链接
+        // linkTarget: 'self', // '_blank' 表示在新标签页打开，'_self' 表示在当前页打开
+      }
+    ],
         series: [//系列
         {
             name: data.name,
@@ -80,6 +81,22 @@ const Chart: React.FC<ChartProps> = ({ data }) => {
     ]  
   };
 
+  const handleClick = () => {
+    window.location.href = `/application-details?ids=${data.id}&isLeaf=true&names=${data.name}`; // 实现跳转到指定链接
+  };
+  useEffect(() => {
+    const chartInstance = chartRef.current?.getEchartsInstance();
+
+    if (chartInstance) {
+      // 监听整个图表的点击事件
+      chartInstance.on('click', handleClick);
+    }
+
+    return () => {
+      chartInstance?.off('click', handleClick); // 清除事件监听
+    };
+  }, []);
+
   useEffect(() => {
     const timeout = setTimeout(() => {
       if (chartRef.current) {
@@ -90,7 +107,11 @@ const Chart: React.FC<ChartProps> = ({ data }) => {
     return () => clearTimeout(timeout);
   }, [data]);
 
-  return <ReactECharts ref={chartRef} option={option} style={{ height: '100%', width: '100%' }} />;
+  return (
+    <div onClick={handleClick} style={{ cursor: 'pointer' }}>
+      <ReactECharts ref={chartRef} option={option} style={{ height: '100%', width: '100%' }} />
+    </div>
+  )
 };
 
 export default Chart;

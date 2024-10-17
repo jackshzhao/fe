@@ -9,13 +9,15 @@ import SortAppBarChart from './SortAppBarChart';
 import DashboardChart from './DashboardChart'
 import AlertLineChart from './AlertLineChart'
 import RollInformation from './RollInformation'
+import AlertMessage from './AlertRollInformation';
+import AppConnectNum from './AppConnectNum'
 import Grid from './Grid';
 import 'antd/dist/antd.css'; 
 import './appDashboard.less'
 import { transform } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
-import {getAppHealth,getAppHealthList} from '@/services/application'
-import {formatTimesHour,formatTimeDay,getTimesRange, getTopUsability} from './utils'
+import {getAppHealth,getAppHealthList,getEvents} from '@/services/application'
+import {formatTimesHour,formatTimeDay,getTimesRange, getTopUsability,formatYearTimesHour} from './utils'
 import { InfoCircleOutlined } from '@ant-design/icons';
 import { text } from 'd3';
 
@@ -29,6 +31,7 @@ const appDashboard: React.FC = () => {
   const [appHealthData,setappHealthData] = useState([]);
   const [importantApp, setImportantApp] = useState([])
   const [topUsabilityApp, setTopUsabilityApp] = useState([])
+  const [messages, setMessages] = useState([])
   const [timesrange_30d, setTimerange_30d] = useState<{ start: number, end: number }>({ start: 0, end: 0 });
   const [linkId,setLinkId] = useState(1);
   const [appStatisticData,setappStatisticData]=useState<[string, number][]>([
@@ -37,13 +40,32 @@ const appDashboard: React.FC = () => {
     ['异常', 0],
   ]);
   //院级核心应用数据
-  const importantAppTest = [{name:'1',health_level:70},{name:'2',health_level:80},{name:'3',health_level:90},
-    {name:'4',health_level:90},{name:'5',health_level:90},{name:'6',health_level:90},
-    {name:'4',health_level:90},{name:'5',health_level:90},{name:'6',health_level:90},
+  const importantAppTest = [{id:'1',name:'1',health_level:70},{id:'1',name:'2',health_level:80},{id:'1',name:'3',health_level:90},
+    {id:'1',name:'4',health_level:90},{id:'1',name:'5',health_level:90},{id:'1',name:'6',health_level:90},
+    {id:'1',name:'4',health_level:90},{id:'1',name:'5',health_level:90},{id:'1',name:'6',health_level:90},
   ]
+
+  const AppConnectData = {
+    time: ['2024-08-10 00:00', '2024-08-10 01:00', '2024-08-10 02:00', '2024-08-10 03:00', '2024-08-10 04:00'],
+    series: [
+      {
+        name: '应用A',
+        data: [120, 132, 101, 134, 90],
+      },
+      {
+        name: '应用B',
+        data: [220, 182, 191, 234, 290],
+      },
+      {
+        name: '应用C',
+        data: [150, 232, 201, 154, 190],
+      },
+    ],
+  };
 
   //院级应用健康列表数据
   useEffect(() => {
+    fetchData();
     //获取24小时的时间范围
     const { start, end } = getTimesRange(30,0,0);
     setTimerange_30d({ start, end });
@@ -91,6 +113,35 @@ const appDashboard: React.FC = () => {
         
   }, []);
 
+  const fetchData = async () => {
+    try {
+      const data = await getEvents(); // 调用封装好的 getevent 函数获取数据
+      for(var i = 0; i < data.length; i++){
+        data[i].trigger_time = formatYearTimesHour(data[i].trigger_time)
+      }
+      
+      setMessages(data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+// const messages = [
+//   {id:'1',target_ident:'告警信息1',rule_name:'2024-8-26'},
+//   {id:'1',target_ident:'告警信息1',rule_name:'2024-8-26'},
+//   {id:'1',target_ident:'告警信息1',rule_name:'2024-8-26'},
+//   {id:'1',target_ident:'告警信息1',rule_name:'2024-8-26'},
+//   {id:'1',target_ident:'告警信息1',rule_name:'2024-8-26'},
+//   {id:'1',target_ident:'告警信息1',rule_name:'2024-8-26'},
+//   {id:'1',target_ident:'告警信息1',rule_name:'2024-8-26'},
+//   {id:'1',target_ident:'告警信息1',rule_name:'2024-8-26'},
+//   {id:'1',target_ident:'告警信息1',rule_name:'2024-8-26'},
+//   {id:'1',target_ident:'告警信息1',rule_name:'2024-8-26'},
+//   {id:'1',target_ident:'告警信息1',rule_name:'2024-8-26'},
+//   {id:'1',target_ident:'告警信息1',rule_name:'2024-8-26'},
+//   {id:'1',target_ident:'告警信息1',rule_name:'2024-8-26'},
+//   {id:'1',target_ident:'告警信息1',rule_name:'2024-8-26'},
+// ]
   
  
 
@@ -148,6 +199,7 @@ const getStatusColor = (health: number): 'success' | 'normal' | 'exception' => {
     setCurrentPage(currentPage - 1);
   };
 
+ 
 
   return (
   <PageLayout  title={"应用大屏"}>
@@ -162,13 +214,9 @@ const getStatusColor = (health: number): 'success' | 'normal' | 'exception' => {
         </div>
         <div style={{ height: '50%', border: '1px solid #ccc' ,margin: '0px 10px 0px 0px',}}>
           <h3 style={{textAlign: 'center'}}>应用告警信息</h3>
-          <div style={{display:'flex',backgroundColor:'rgb(250,250,250)'}}>
-            <div style={{flex: '1',textAlign:'left'}}>应用名称</div>
-            <div style={{flex:'2',textAlign:'center'}}>告警信息</div>
-            <div style={{flex:'1',textAlign:'right'}}>告警时间</div>
-        </div>
             {/* <AlertLineChart data={appHealthData} ystep={5} ymax={50} Tname={'健康应用'}/> */}
-            <RollInformation />
+            {/* <RollInformation /> */}
+            <AlertMessage messages={messages}/>
         </div>
       </div>
       <div className="flex-col-item">
@@ -198,19 +246,15 @@ const getStatusColor = (health: number): 'success' | 'normal' | 'exception' => {
       <div className="flex-col-item" >
         <div style={{ height: '50%', border: '1px solid #ccc',margin: '0px 10px 10px 0px' }}>
         
-          <h3 style={{textAlign: 'center'}}>应用可用性
-            <Tooltip title={'服务等级协议(SLA)应用可用性 = 1 - (应用异常时间*0.6)/1月1日至今时间'}>
-              <InfoCircleOutlined />
-            </Tooltip>
-          </h3>
-          
-                   
-          <BarChart data={topUsabilityApp}/>  
+          <h3 style={{textAlign: 'center'}}>应用连接数</h3>
+          <AppConnectNum data={AppConnectData}/>                   
+          {/* <BarChart data={topUsabilityApp}/>   */}
         </div>
         <div style={{ position: 'relative', height: '50%', border: '1px solid #ccc',margin: '0px 10px 0px 0px'}}>
           
-          <h3 style={{textAlign: 'center'}}>应用统计</h3>
-          <RoseChart data={appStatisticData}/>
+          <h3 style={{textAlign: 'center'}}>告警趋势图</h3>
+          {/* <RoseChart data={appStatisticData}/> */}
+          <AlertLineChart data={appHealthData} ystep={2} ymax={20} Tname={'告警应用'}/>
         </div>
       </div>
     </div>

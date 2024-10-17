@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useContext } from 'react';
-import { Table, Tag, Tooltip, Space, Input, Dropdown, Menu, Button, Modal, message, Select } from 'antd';
+import { Table, Tag, Tooltip, Space, Input, Dropdown, Menu, Button, Modal, message, Select, Popconfirm } from 'antd';
 import {Link} from 'react-router-dom';
 import { ColumnsType } from 'antd/es/table';
 import { SearchOutlined, DownOutlined, ReloadOutlined, CopyOutlined, ApartmentOutlined, InfoCircleOutlined, EyeOutlined } from '@ant-design/icons';
@@ -148,12 +148,33 @@ export default function List(props: IProps) {
       dataIndex: 'ident',
       className: 'n9e-hosts-table-column-ident',
       render: (text, record) => { 
+        console.log(`record.tags:${record.tags}`)
         let dashboardID = 6;  
         if(record.os === 'windows'){
           dashboardID = 7;
-        } 
+        }
+        let  dashboardID2
+        if(record.tags.includes("Nginx")){
+          dashboardID2 = 19
+          console.log(`dashboardID2:${dashboardID2}`)
+        }else if(record.tags.includes("Tomcat")){
+          dashboardID2 = 15
+        }else if(record.tags.includes("Oracle")){
+          dashboardID2 = 16
+        }else if(record.tags.includes("MySQL")){
+          dashboardID2 = 21
+        }
         return(
-          <Link to={`/dashboard/${dashboardID}?ident=${text}&prom=1&gids=${gids}&title=${appTitle}&showHeader=false`} >{text}</Link>
+          <Popconfirm 
+                title="跳转主机大屏或者中间件大屏"
+                onConfirm={()=>{window.open(`/dashboard/${dashboardID}?ident=${text}&prom=1&gids=${gids}&title=${appTitle}&showHeader=false`,'_self')}}
+                onCancel={()=>{window.open(`/dashboard/${dashboardID2}?ident=${text}&prom=1&gids=${gids}&title=${appTitle}&showHeader=false`,'_self')}}
+                okText="主机"
+                cancelText="中间件"
+          >
+            {text}
+          </Popconfirm>
+          // <Link to={`/dashboard/${dashboardID}?ident=${text}&prom=1&gids=${gids}&title=${appTitle}&showHeader=false`} >{text}</Link>
         )
       }
     },
@@ -207,22 +228,27 @@ export default function List(props: IProps) {
         render(tagArr) {
           const content =
             tagArr &&
-            tagArr.map((item) => (
-              <Tag
-                color='purple'
-                key={item}
-                onClick={(e) => {
-                  if (!tableQueryContent.includes(item)) {
-                    isAddTagToQueryInput.current = true;
-                    const val = tableQueryContent ? `${tableQueryContent.trim()} ${item}` : item;
-                    setTableQueryContent(val);
-                    setSearchVal(val);
-                  }
-                }}
-              >
-                {item}
-              </Tag>
-            ));
+            tagArr.map((item) => {
+              // 如果 tag 包含 'type='，则移除 'type='，只显示 '=' 后面的部分
+              const displayTag = item.includes('type=') ? item.split('type=')[1] : item;
+    
+              return (
+                <Tag
+                  color='purple'
+                  key={item}
+                  onClick={(e) => {
+                    if (!tableQueryContent.includes(item)) {
+                      isAddTagToQueryInput.current = true;
+                      const val = tableQueryContent ? `${tableQueryContent.trim()} ${item}` : item;
+                      setTableQueryContent(val);
+                      setSearchVal(val);
+                    }
+                  }}
+                >
+                  {displayTag}
+                </Tag>
+              );
+            });
           return (
             tagArr && (
               <Tooltip title={content} placement='topLeft' getPopupContainer={() => document.body} overlayClassName='mon-manage-table-tooltip'>
@@ -371,9 +397,7 @@ export default function List(props: IProps) {
           if (Math.abs(text) >90) {
             backgroundColor = GREEN_COLOR;
           }
-          if (reocrd.target_up === 0) {
-            backgroundColor = LOST_COLOR;
-          }
+          
           return (
             <div
               className='table-td-fullBG'

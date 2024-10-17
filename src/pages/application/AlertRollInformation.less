@@ -1,0 +1,42 @@
+.alert-container {
+    width: 100%;
+    height: 80%; /* 可以根据需求设置高度 */
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .alert-content {
+    position: absolute;
+    top: 0;
+  }
+  
+  .alert-message {
+    padding: 10px;
+    background-color: #f8f8f8;
+    border-bottom: 1px solid #ddd;
+  }
+  .row{
+    overflow: hidden; 
+    display: flex;
+    margin-bottom: 10px;
+  }
+    .row-item{
+      text-align: left;
+      white-space: nowrap;// 防止换行
+      overflow: hidden;// 隐藏溢出的文本
+      text-overflow: ellipsis;// 使用省略号
+    }
+  
+  .scrolling {
+    animation: scrollUp 15s linear infinite;
+  }
+  
+  @keyframes scrollUp {
+    0% {
+      transform: translateY(0);
+    }
+    100% {
+      transform: translateY(calc(-1 * var(--scroll-height)));
+    }
+  }
+  

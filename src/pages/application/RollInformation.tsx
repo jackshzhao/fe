@@ -1,10 +1,10 @@
-import React, { Component, createRef } from 'react';
+import React, { Component, createRef,useRef,useState } from 'react';
 import { getEvents } from '@/services/application'; 
 import {formatYearTimesHour,} from './utils';
 import './RollInformation.less'
 
 interface RollState {
-  list: { group_name: string , rule_name: string,trigger_time:string,id: string}[];
+  list: { target_ident: string , rule_name: string,trigger_time:string,id: string}[];
   count: number;
 }
 
@@ -90,9 +90,9 @@ class Roll extends Component<{}, RollState> {
           {this.state.list.map((item, index) => (
             <a href={`/alert-cur-events/${item.id}`}>
                 <div key={index} className="row">
-                    <div style={{flex: '1',textAlign:'left'}}>{item.group_name}</div>
-                    <div style={{flex:'2',textAlign:'center'}}>{item.rule_name}</div> 
-                    <div style={{flex:'1',textAlign:'right'}}>{item.trigger_time}</div>     
+                    <div style={{flex: '1',textAlign:'center',marginLeft:'5px',wordBreak:'break-all',borderRight: '1px solid rgb(235,235,235)'}}>{item.target_ident}</div>
+                    <div style={{flex:'2',textAlign:'center',wordBreak:'break-all',borderRight: '1px solid rgb(235,235,235)'}}>{item.rule_name}</div> 
+                    {/* <div style={{flex:'1',textAlign:'center',}}>{item.trigger_time}</div>      */}
                 </div>
             </a>
           ))}

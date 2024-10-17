@@ -14,6 +14,7 @@ import { CanvasRenderer } from 'echarts/renderers';
 import { Smooth } from '@antv/g2/lib/shape/line/smooth';
 import { symbol } from 'd3';
 import { name } from '../alertRules/Form/EventSettings/Relabel';
+import { axisXConfig } from '@antv/g2/lib/component/axisX';
 
 echarts.use([
   TitleComponent,
@@ -44,11 +45,21 @@ const Chart: React.FC<ChartProps> = ({ data ,ystep,ymax,Tname}) => {
     xAxis: {
       type: 'category',
       data: xData,
+      axisLable:{
+        textStyle:{
+          fontSize:20
+        }
+      }
     },
     yAxis: {
       type: 'value',
       max: ymax,
       interval: ystep,
+      axisLable:{
+        textStyle:{
+          fontSize:20
+        }
+      }
     },
     series: [
       {
