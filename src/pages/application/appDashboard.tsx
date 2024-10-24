@@ -16,7 +16,7 @@ import 'antd/dist/antd.css';
 import './appDashboard.less'
 import { transform } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
-import {getAppHealth,getAppHealthList,getEvents} from '@/services/application'
+import {getAppHealth,getAlertCountMetric,getEvents} from '@/services/application'
 import {formatTimesHour,formatTimeDay,getTimesRange, getTopUsability,formatYearTimesHour} from './utils'
 import { InfoCircleOutlined } from '@ant-design/icons';
 import { text } from 'd3';
@@ -102,8 +102,8 @@ const appDashboard: React.FC = () => {
       setTopUsabilityApp(getTopUsability(res))
     });
 
-    //应用健康度统计
-    getAppHealthList(start,end,10800).then((res) => {
+    //告警统计
+    getAlertCountMetric(start,end,10800).then((res) => {
       for(var i = 0; i < res.length; i++){
         res[i][0] = formatTimeDay(res[i][0])
       }
