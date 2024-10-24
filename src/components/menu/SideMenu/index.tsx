@@ -46,12 +46,12 @@ export const getMenuList = (t) => {
       label: t('仪表盘'),
       children: [
         // {
-        //   key: '/appdashboards',
+        //   key: '/dashboardsSystem',
         //   label: t('应用仪表盘'),
         // },
         {
           key: '/dashboards',
-          label: t('监控仪表盘'),
+          label: t('设备仪表盘'),
         },
         {
           key: '/embedded-dashboards',
@@ -285,28 +285,28 @@ const SideMenu = () => {
     return false;
   }, [location.pathname, location.search]);
 
-  useEffect(() => {
-    if (profile?.roles?.length > 0) {
-      // 过滤掉没有权限的菜单
-      const newMenus: any = _.filter(
-        _.map(menuList, (menu) => {
-          return {
-            ...menu,
-            children: _.filter(menu.children, (item) => item && _.includes(perms, item.key)),
-          };
-        }),
-        (item) => {
-          return item.children && item.children.length > 0;
-        },
-      );
+  // useEffect(() => {
+  //   if (profile?.roles?.length > 0) {
+  //     // 过滤掉没有权限的菜单
+  //     const newMenus: any = _.filter(
+  //       _.map(menuList, (menu) => {
+  //         return {
+  //           ...menu,
+  //           children: _.filter(menu.children, (item) => item && _.includes(perms, item.key)),
+  //         };
+  //       }),
+  //       (item) => {
+  //         return item.children && item.children.length > 0;
+  //       },
+  //     );
 
       
-      console.log("perms : ", perms)
-      console.log("menuList : ", menuList)
+  //     console.log("perms : ", perms)
+  //     console.log("menuList : ", menuList)
 
-      setMenus(newMenus);
-    }
-  }, [profile?.roles, i18n.language]);
+  //     setMenus(newMenus);
+  //   }
+  // }, [profile?.roles, i18n.language]);
 
   useEffect(() => {
     let finalPath = ['', ''];

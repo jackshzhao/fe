@@ -143,7 +143,7 @@ const getMenuList = (t) => {
       children: [
         {
           key: '/targets',
-          label: t('监控机器'),
+          label: t('主机管理'),
         },
       ],
     },
@@ -172,7 +172,7 @@ const getMenuList = (t) => {
       key: 'manage',
       icon: <IconFont type='icon-Menu_PersonnelOrganization' />,
       activeIcon: <Icon component={menuIcon.PersonnelOrganization as any} />,
-      label: t('人员组织'),
+      label: t('系统管理'),
       children: [
         {
           key: '/users',

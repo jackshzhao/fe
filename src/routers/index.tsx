@@ -170,7 +170,7 @@ export default function Content() {
         <Route path='/dashboards/:id' exact component={DashboardDetail} />
         <Route path='/dashboards/share/:id' component={DashboardShare} />
         <Route path='/dashboards' component={Dashboard} />
-        <Route path='/appdashboards' component={Dashboard} />
+        <Route path='/dashboardsSystem' component={Dashboard} />
         
         <Route path='/chart/:ids' component={Chart} />
 
