@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import ReactECharts from 'echarts-for-react';
+import { useHistory  } from 'react-router-dom';
 import * as echarts from 'echarts/core';
 import { PieChart } from 'echarts/charts';
 import {
@@ -81,8 +82,11 @@ const Chart: React.FC<ChartProps> = ({ data}) => {
     ]  
   };
 
+  const history = useHistory(); // 获取 history 对象
+
+
   const handleClick = () => {
-    window.location.href = `/application-details?ids=${data.id}&isLeaf=true&names=${data.name}`; // 实现跳转到指定链接
+    history.push(`/application-details?ids=${data.id}&isLeaf=true&names=${data.name}`); // 实现跳转到指定链接
   };
   useEffect(() => {
     const chartInstance = chartRef.current?.getEchartsInstance();

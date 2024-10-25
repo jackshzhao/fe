@@ -71,10 +71,10 @@ const AlertMessage: React.FC<AlertMessageProps> = ({ messages }) => {
             <div
               className="row-item"
               style={{
-                flex: '2',
+                flex: '1.5',
                 margin: '0px 5px 0px 0px',
               }}
-              //title={message.rule_name} // tooltip 显示完整信息
+              
             >
               {message.rule_name}
             </div>

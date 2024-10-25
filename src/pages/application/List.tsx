@@ -154,28 +154,55 @@ export default function List(props: IProps) {
           dashboardID = 7;
         }
         let  dashboardID2
-        if(record.tags.includes("Nginx")){
-          dashboardID2 = 19
-          console.log(`dashboardID2:${dashboardID2}`)
-        }else if(record.tags.includes("Tomcat")){
-          dashboardID2 = 15
-        }else if(record.tags.includes("Oracle")){
-          dashboardID2 = 16
-        }else if(record.tags.includes("MySQL")){
-          dashboardID2 = 21
+        if (!record.tags || record.tags.length === 0) {
+          return (
+            <Link to={`/dashboard/${dashboardID}?ident=${text}&prom=1&gids=${gids}&title=${appTitle}&showHeader=false`}>
+              {text}
+            </Link>
+          );
+        } else {
+          // 遍历 tags，判断并根据包含的值显示不同的组件
+          for (let item of record.tags) {
+            console.log(`item: ${typeof item}`);
+      
+            // 设置不同中间件的 dashboardID2
+            if (item.includes("Nginx")) {
+              dashboardID2 = 19;
+              console.log(`dashboardID2: ${dashboardID2}`);
+            } else if (item.includes("Tomcat")) {
+              dashboardID2 = 15;
+            } else if (item.includes("Oracle")) {
+              dashboardID2 = 16;
+            } else if (item.includes("MySQL")) {
+              dashboardID2 = 21;
+            }
+      
+            // 如果 tags 包含 "type"，返回 <Popconfirm>
+            if (item.includes("type")) {
+              return (
+                <span style={{ cursor: 'pointer' }}>
+                  <Popconfirm
+                    title="跳转主机大屏或者中间件大屏"
+                    onConfirm={() => { history.push(`/dashboard/${dashboardID}?ident=${text}&prom=1&gids=${gids}&title=${appTitle}&showHeader=false`); }}
+                    onCancel={() => { history.push(`/dashboard/${dashboardID2}?ident=${text}&prom=1&gids=${gids}&title=${appTitle}&showHeader=false`); }}
+                    okText="主机"
+                    cancelText="中间件"
+                  >
+                    {text}
+                  </Popconfirm>
+                </span>
+              );
+            }
+          }
+      
+          // 如果没有包含 "type"，返回 <Link>
+          return (
+            <Link to={`/dashboard/${dashboardID}?ident=${text}&prom=1&gids=${gids}&title=${appTitle}&showHeader=false`}>
+              {text}
+            </Link>
+          );
         }
-        return(
-          <Popconfirm 
-                title="跳转主机大屏或者中间件大屏"
-                onConfirm={()=>{window.open(`/dashboard/${dashboardID}?ident=${text}&prom=1&gids=${gids}&title=${appTitle}&showHeader=false`,'_self')}}
-                onCancel={()=>{window.open(`/dashboard/${dashboardID2}?ident=${text}&prom=1&gids=${gids}&title=${appTitle}&showHeader=false`,'_self')}}
-                okText="主机"
-                cancelText="中间件"
-          >
-            {text}
-          </Popconfirm>
-          // <Link to={`/dashboard/${dashboardID}?ident=${text}&prom=1&gids=${gids}&title=${appTitle}&showHeader=false`} >{text}</Link>
-        )
+             
       }
     },
   ];
