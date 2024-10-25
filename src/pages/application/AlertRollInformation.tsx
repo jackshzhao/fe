@@ -71,11 +71,7 @@ const AlertMessage: React.FC<AlertMessageProps> = ({ messages }) => {
             <div
               className="row-item"
               style={{
-<<<<<<< HEAD
                 flex: '1.5',
-=======
-                flex: '1.2',
->>>>>>> 09005227470ea8571bd779273b20702353869be9
                 margin: '0px 5px 0px 0px',
               }}
               
