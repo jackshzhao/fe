@@ -27,8 +27,8 @@ export const getAlertTendcy = function (id?: string, start?:number,end?:number,s
     });
 };
 
-export const getAppHealthList = function (start?:number,end?:number,step?:number) {
-    return request(`/api/n9e/proxy/1/api/v1/query_range?query=application_health_count&start=${start}&end=${end}&step=${step}`, {
+export const getAlertCountMetric = function (start?:number,end?:number,step?:number) {
+    return request(`/api/n9e/proxy/1/api/v1/query_range?query=system_cur_alert_total&start=${start}&end=${end}&step=${step}`, {
       method: RequestMethod.Get,
       
     }).then((res) => {
