@@ -14,7 +14,7 @@ export const getAppHealth = function(){
       });
 }
 
-export const getAlertTendcy = function (id?: string, start?:number,end?:number,step?:number) {
+export const getAppHealthTendcy = function (id?: string, start?:number,end?:number,step?:number) {
     return request(`/api/n9e/proxy/1/api/v1/query_range?query=application_health_${id}&start=${start}&end=${end}&step=${step}`, {
       method: RequestMethod.Get,
       
@@ -37,6 +37,18 @@ export const getAlertCountMetric = function (start?:number,end?:number,step?:num
       }
       return res.data.result[0].values;
     });
+};
+
+export const getAppResponseTimeTendcy = function (names?:string,start?:number,end?:number,step?:number) {
+  return request(`/api/n9e/proxy/1/api/v1/query_range?query=http_response_response_time{product="${names}"}&start=${start}&end=${end}&step=${step}`, {
+    method: RequestMethod.Get,
+    
+  }).then((res) => {
+    if(res.data.result.length === 0){
+      return [];
+    }
+    return res.data.result[0].values;
+  });
 };
 
 export const getAlertTable = function (id?: string) {

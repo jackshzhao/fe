@@ -66,7 +66,7 @@ const appDashboard: React.FC = () => {
   //院级应用健康列表数据
   useEffect(() => {
     fetchData();
-    //获取24小时的时间范围
+    //获取30天的时间范围
     const { start, end } = getTimesRange(30,0,0);
     setTimerange_30d({ start, end });
     let healthCount = 0;
@@ -252,7 +252,7 @@ const getStatusColor = (health: number): 'success' | 'normal' | 'exception' => {
         </div>
         <div style={{ position: 'relative', height: '50%', border: '1px solid #ccc',margin: '0px 10px 0px 0px'}}>
           
-          <h3 style={{textAlign: 'center'}}>告警趋势图</h3>
+          <h3 style={{textAlign: 'center'}}>告警总体趋势</h3>
           {/* <RoseChart data={appStatisticData}/> */}
           <AlertLineChart data={appHealthData} ystep={2} ymax={20} Tname={'告警应用'}/>
         </div>

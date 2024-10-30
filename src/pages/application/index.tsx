@@ -13,7 +13,7 @@ import { useLocation } from 'react-router-dom';
 
 
 import AlertLineChart from './AlertLineChart';
-import {getAlertTendcy,getAlertTable} from '@/services/application';
+import {getAppHealthTendcy,getAppResponseTimeTendcy,getAlertTable} from '@/services/application';
 import List from './List';
 import {formatTimesHour, getTimesRange} from './utils'
 import BusinessGroup from './BusinessGroup';
@@ -366,6 +366,7 @@ const Application: React.FC = (props) => {
   const [refreshFlag, setRefreshFlag] = useState(_.uniqueId('refreshFlag_')); //利用 _.uniqueId('refreshFlag_') 方法生成了一个初始的唯一 ID
   const [showLineChart, setShowLineChart] = useState(false);
   const [alertLineData,setalertLineData] = useState([]);
+  const [appTimeData,setAppTimeData] = useState([]);
   const [alertTableData,setalertTableData] = useState([]);
   //const [appTitle,setAppTitle] = useState('');
   
@@ -374,7 +375,7 @@ const Application: React.FC = (props) => {
   const queryParams = new URLSearchParams(location.search);
   const ids = queryParams.get('ids');
   const gids:string = ids || '0';
-  const names = queryParams.get('names')
+  const names = queryParams.get('names') || '';
   const appTitle:string = names || ' '
     
   
@@ -386,14 +387,24 @@ const Application: React.FC = (props) => {
     
     //获取7天的时间范围
     const { start, end } = getTimesRange(7,0,0);
+    //获取24小时的时间范围
+    const { start:startOneDay, end:endOneDay } = getTimesRange(1,0,0);
     //console.log(`start1${start}, end1${end} `)
     
-    getAlertTendcy(gids,start,end,2520).then((res) => {
+    getAppHealthTendcy(gids,start,end,2520).then((res) => {
       for(var i = 0; i < res.length; i++){
         res[i][0] = formatTimesHour(res[i][0])
       }
       //console.log("res1:",res)
       setalertLineData(res);
+    });
+
+    getAppResponseTimeTendcy(names,startOneDay,endOneDay,360).then((res) => {
+      for(var i = 0; i < res.length; i++){
+        res[i][0] = formatTimesHour(res[i][0])
+        res[i][1] = (res[i][1] * 1000).toFixed(2)
+      }
+      setAppTimeData(res);
     });
 
     getAlertTable(gids).then((res) => {
@@ -520,15 +531,15 @@ const Application: React.FC = (props) => {
           {/* 访问延迟 */}
           <div style={{width:'100%',display:'flex'}}>
             <div style={{width:'50%'}}>
-              {showLineChart && <h3 style={{textAlign: 'center'}}>应用健康趋势图</h3>}
+              {showLineChart && <h3 style={{textAlign: 'center'}}>应用健康趋势</h3>}
               {showLineChart && <div style={{height:'280px'}}>
                 <AlertLineChart data={alertLineData} ymax={100} ystep={20} Tname={'应用健康度'}/>
               </div>}
             </div>
             <div style={{width:'50%'}}>
-              {showLineChart && <h3 style={{textAlign: 'center'}}>应用请求延迟图</h3>}
+              {showLineChart && <h3 style={{textAlign: 'center'}}>应用请求延迟</h3>}
               {showLineChart && <div style={{height:'280px'}}>
-                <AlertLineChart data={alertLineData} ymax={100} ystep={20} Tname={'应用健康度'}/>
+                <AlertLineChart data={appTimeData} ymax={1000} ystep={100} Tname={'应用请求延迟'}/>
               </div>}
             </div>
 
