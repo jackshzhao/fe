@@ -45,6 +45,10 @@ const appDashboard: React.FC = () => {
     {id:'1',name:'4',health_level:90},{id:'1',name:'5',health_level:90},{id:'1',name:'6',health_level:90},
     {id:'1',name:'4',health_level:90},{id:'1',name:'5',health_level:90},{id:'1',name:'6',health_level:90},
   ]
+  const [appConnectData, setAppConnectData] = useState<AppConnectDataType>({
+    time: [],
+    series: [],
+  });
 
   interface SeriesData {
     name: string;
@@ -55,16 +59,7 @@ const appDashboard: React.FC = () => {
     time: string[];
     series: SeriesData[];
   }
-  
-  const AppConnectData: AppConnectDataType = {
-    time: [],
-    series: [
-      {
-        name: '',
-        data: [],
-      },
-    ],
-  };
+
 
   //院级应用健康列表数据
   useEffect(() => {
@@ -120,15 +115,15 @@ const appDashboard: React.FC = () => {
         return
       }
 
-      AppConnectData.time = generateTimeArray(res[0].start_time, res[0].step_time, 60)
-      for(var i =0; i < res.length; i++){
-        AppConnectData.series.push(
-          {
-            name: res[0].name,
-            data:res[0].values
-          }
-        )
-      }
+      const timeArray = generateTimeArray(res[0].start_time, res[0].step_time, 60)
+      const seriesData = res.map(item => ({
+        name: item.name,
+        data: item.values,
+      }));
+      setAppConnectData({
+        time: timeArray,
+        series: seriesData,
+      });
     });
         
   }, []);
@@ -281,7 +276,7 @@ const getStatusColor = (health: number): 'success' | 'normal' | 'exception' => {
         <div style={{ height: '50%', border: '1px solid #ccc',margin: '0px 10px 10px 0px' }}>
         
           <h3 style={{textAlign: 'center'}}>应用连接数</h3>
-          <AppConnectNum data={AppConnectData}/>                   
+          <AppConnectNum data={appConnectData}/>                   
           {/* <BarChart data={topUsabilityApp}/>   */}
         </div>
         <div style={{ position: 'relative', height: '50%', border: '1px solid #ccc',margin: '0px 10px 0px 0px'}}>

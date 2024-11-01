@@ -646,7 +646,7 @@ const Application: React.FC = (props) => {
             <div style={{width:'50%'}}>
               {showLineChart && <h3 style={{textAlign: 'center', marginBottom: '1px'}}>应用请求延迟(ms)</h3>}
               {showLineChart && <div style={{height:'280px'}}>
-                <AlertLineChart data={appTimeData} ymax={500} ystep={50} Tname={'应用请求延迟'}/>
+                <AlertLineChart data={appTimeData} ymax={300} ystep={50} Tname={'应用请求延迟'}/>
               </div>}
             </div>
           </div>
