@@ -40,6 +40,12 @@ const LineChart: React.FC<LineChartProps> = ({ data }) => {
         type: 'category',
         boundaryGap: false,
         data: data.time,
+        axisLabel: {
+          formatter: (value) => {
+            // 只显示时:分:秒部分
+            return value.split(' ')[1]; 
+          }
+        }
       },
       yAxis: {
         type: 'value',

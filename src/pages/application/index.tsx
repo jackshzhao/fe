@@ -452,6 +452,7 @@ const Application: React.FC = (props) => {
       }
       sethttpRequestTableData(res);
     });
+    
 
     //获取机器列表
     // getMonObjectList({gids:gids}).then((res) => {
@@ -645,7 +646,7 @@ const Application: React.FC = (props) => {
               </div>}
             </div>
           </div>
-
+          <br />
           {/* Http请求信息 */}
           {/* {showLineChart && <h3 style={{textAlign: 'center'}}>应用请求信息</h3>} */}
           {showLineChart &&  
