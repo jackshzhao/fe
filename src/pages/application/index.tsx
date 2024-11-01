@@ -471,11 +471,13 @@ const Application: React.FC = (props) => {
       title: '接口地址',
       dataIndex: 'target',
       key: 'target',
+      width: '25%',
     },
     {
       title: '连通性',
       dataIndex: 'result_code',
       key: 'result_code',
+      width: '25%',
       render(text,record){
         let backgroundColor;
         if (text === "正常"){
@@ -499,6 +501,7 @@ const Application: React.FC = (props) => {
       title: 'http请求返回码',
       dataIndex: 'response_code',
       key: 'response_code',
+      width: '25%',
       render(text,record){
         let backgroundColor = RED_COLOR;
         if (text === 200){
@@ -520,6 +523,7 @@ const Application: React.FC = (props) => {
       title: '延迟(毫秒)',
       dataIndex: 'response_time',
       key: 'response_time',
+      width: '25%',
       render(text,record){
         let backgroundColor = RED_COLOR;
         if(text < 500){
