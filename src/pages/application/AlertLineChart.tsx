@@ -51,6 +51,10 @@ const Chart: React.FC<ChartProps> = ({ data ,ystep,ymax,Tname}) => {
     tooltip: {
       trigger: 'axis',
     },
+    grid: {
+      top: '10%',   // 减少图表的顶部边距
+      bottom: '10%', // 减少图表的底部边距
+    },
     xAxis: {
       type: 'category',
       data: xData,

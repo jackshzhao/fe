@@ -630,33 +630,33 @@ const Application: React.FC = (props) => {
             setOperateType={setOperateType}
           />
 
+          {/* 访问延迟 */}
+          <div style={{width:'100%',display:'flex'}}>
+            <div style={{width:'50%'}}>
+              {showLineChart && <h3 style={{textAlign: 'center', marginBottom: '1px'}}>应用健康趋势</h3>}
+              {showLineChart && <div style={{height:'280px'}}>
+                <AlertLineChart data={alertLineData} ymax={100} ystep={20} Tname={'应用健康度'}/>
+              </div>}
+            </div>
+            <div style={{width:'50%'}}>
+              {showLineChart && <h3 style={{textAlign: 'center', marginBottom: '1px'}}>应用请求延迟(ms)</h3>}
+              {showLineChart && <div style={{height:'280px'}}>
+                <AlertLineChart data={appTimeData} ymax={500} ystep={50} Tname={'应用请求延迟'}/>
+              </div>}
+            </div>
+          </div>
+
           {/* Http请求信息 */}
-          {showLineChart && <h3 style={{textAlign: 'center'}}>应用请求信息</h3>}
+          {/* {showLineChart && <h3 style={{textAlign: 'center'}}>应用请求信息</h3>} */}
           {showLineChart &&  
             <Table
                   rowKey={httpRequestTableData=>httpRequestTableData['id']}
                   dataSource={httpRequestTableData}
                   columns={appHttpRequestColumns}
                   pagination={false} // Disable pagination for simplicity
-            />}
-
-          {/* 访问延迟 */}
-          <div style={{width:'100%',display:'flex',padding:'40px'}}>
-            <div style={{width:'50%'}}>
-              {showLineChart && <h3 style={{textAlign: 'center'}}>应用健康趋势</h3>}
-              {showLineChart && <div style={{height:'280px'}}>
-                <AlertLineChart data={alertLineData} ymax={100} ystep={20} Tname={'应用健康度'}/>
-              </div>}
-            </div>
-            <div style={{width:'50%'}}>
-              {showLineChart && <h3 style={{textAlign: 'center'}}>应用请求延迟(ms)</h3>}
-              {showLineChart && <div style={{height:'280px'}}>
-                <AlertLineChart data={appTimeData} ymax={500} ystep={50} Tname={'应用请求延迟'}/>
-              </div>}
-            </div>
-
-          </div>
-          
+            />
+          }
+          <br />
           {/* 告警信息 */}
           {showLineChart && <h3 style={{textAlign: 'center'}}>告警信息</h3>}
           {showLineChart &&  
