@@ -148,7 +148,6 @@ export default function List(props: IProps) {
       dataIndex: 'ident',
       className: 'n9e-hosts-table-column-ident',
       render: (text, record) => { 
-        console.log(`record.tags:${record.tags}`)
         let dashboardID = 6;  
         if(record.os === 'windows'){
           dashboardID = 7;
@@ -180,7 +179,7 @@ export default function List(props: IProps) {
             // 如果 tags 包含 "type"，返回 <Popconfirm>
             if (item.includes("type")) {
               return (
-                <span style={{ cursor: 'pointer' }}>
+                <span style={{ cursor: 'pointer', color: 'rgb(24, 144, 255)' }}>
                   <Popconfirm
                     title="跳转主机大屏或者中间件大屏"
                     onConfirm={() => { history.push(`/dashboard/${dashboardID}?ident=${text}&prom=1&gids=${gids}&title=${appTitle}&showHeader=false`); }}

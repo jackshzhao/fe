@@ -13,13 +13,15 @@ import { useLocation } from 'react-router-dom';
 
 
 import AlertLineChart from './AlertLineChart';
-import {getAppHealthTendcy,getAppResponseTimeTendcy,getAlertTable} from '@/services/application';
+import {getAppHealthTendcy,getAppResponseTimeTendcy,getAlertTable, getHttpRequestTable} from '@/services/application';
 import List from './List';
 import {formatTimesHour, getTimesRange} from './utils'
 import BusinessGroup from './BusinessGroup';
 import BusinessGroup2, { getCleanBusinessGroupIds } from '@/components/BusinessGroup';
 import './locale';
 import './index.less';
+import { render } from 'react-dom';
+import { And } from 'lezer-promql';
 
 export { BusinessGroup }; // TODO 部分页面使用的老的业务组组件，后续逐步替换
 
@@ -40,6 +42,12 @@ interface OperateionModalProps {
   idents: string[];
   reloadList: () => void;
 }
+
+const GREEN_COLOR = '#3FC453';
+const YELLOW_COLOR = '#FF9919';
+const RED_COLOR = '#FF656B';
+const LOST_COLOR_LIGHT = '#CCCCCC';
+const LOST_COLOR_DARK = '#929090';
 
 
 //使用 TextArea 组件来创建多行输入框，用rows来控住行数
@@ -368,6 +376,7 @@ const Application: React.FC = (props) => {
   const [alertLineData,setalertLineData] = useState([]);
   const [appTimeData,setAppTimeData] = useState([]);
   const [alertTableData,setalertTableData] = useState([]);
+  const [httpRequestTableData,sethttpRequestTableData] = useState([]);
   //const [appTitle,setAppTitle] = useState('');
   
    
@@ -428,6 +437,22 @@ const Application: React.FC = (props) => {
       setalertTableData(res);
     });
 
+    getHttpRequestTable(appTitle).then((res) => {
+      if(res === null){
+        return
+      }
+      for(var i =0; i < res.length; i++){
+        if(res[i].result_code === 0){
+          res[i].result_code = "正常"
+        }else{
+          res[i].result_code = "异常"
+        }
+
+        res[i].response_time = res[i].response_time.toFixed(2)
+      }
+      sethttpRequestTableData(res);
+    });
+
     //获取机器列表
     // getMonObjectList({gids:gids}).then((res) => {
     //   setAppTitle(res.dat.list[0].group_obj.name)
@@ -440,6 +465,83 @@ const Application: React.FC = (props) => {
     
         
   }, [gids]);
+
+  const appHttpRequestColumns = [
+    {
+      title: '接口地址',
+      dataIndex: 'target',
+      key: 'target',
+    },
+    {
+      title: '连通性',
+      dataIndex: 'result_code',
+      key: 'result_code',
+      render(text,record){
+        let backgroundColor;
+        if (text === "正常"){
+          backgroundColor = GREEN_COLOR;
+        }
+        if(text === "异常"){
+          backgroundColor = RED_COLOR;
+        }
+        return(
+          <div
+              className='table-td-fullBG'
+              style={{
+                backgroundColor: backgroundColor,
+              }}
+            >
+              {text}
+            </div>
+        );
+      },
+    },{
+      title: 'http请求返回码',
+      dataIndex: 'response_code',
+      key: 'response_code',
+      render(text,record){
+        let backgroundColor = RED_COLOR;
+        if (text === 200){
+          backgroundColor = GREEN_COLOR;
+        }
+        return(
+          <div
+              className='table-td-fullBG'
+              style={{
+                backgroundColor: backgroundColor,
+              }}
+            >
+              {text}
+            </div>
+        );
+      },
+    },
+    {
+      title: '延迟(毫秒)',
+      dataIndex: 'response_time',
+      key: 'response_time',
+      render(text,record){
+        let backgroundColor = RED_COLOR;
+        if(text < 500){
+          backgroundColor = GREEN_COLOR;
+        }
+        if(text < 2000){
+          backgroundColor = YELLOW_COLOR;
+        }
+      
+        return(
+          <div
+              className='table-td-fullBG'
+              style={{
+                backgroundColor: backgroundColor,
+              }}
+            >
+              {text}
+            </div>
+        )
+      }
+    },
+  ];
 
   const alertColumns = [
     {
@@ -528,8 +630,18 @@ const Application: React.FC = (props) => {
             setOperateType={setOperateType}
           />
 
+          {/* Http请求信息 */}
+          {showLineChart && <h3 style={{textAlign: 'center'}}>应用请求信息</h3>}
+          {showLineChart &&  
+            <Table
+                  rowKey={httpRequestTableData=>httpRequestTableData['id']}
+                  dataSource={httpRequestTableData}
+                  columns={appHttpRequestColumns}
+                  pagination={false} // Disable pagination for simplicity
+            />}
+
           {/* 访问延迟 */}
-          <div style={{width:'100%',display:'flex'}}>
+          <div style={{width:'100%',display:'flex',padding:'40px'}}>
             <div style={{width:'50%'}}>
               {showLineChart && <h3 style={{textAlign: 'center'}}>应用健康趋势</h3>}
               {showLineChart && <div style={{height:'280px'}}>
@@ -537,16 +649,16 @@ const Application: React.FC = (props) => {
               </div>}
             </div>
             <div style={{width:'50%'}}>
-              {showLineChart && <h3 style={{textAlign: 'center'}}>应用请求延迟</h3>}
+              {showLineChart && <h3 style={{textAlign: 'center'}}>应用请求延迟(ms)</h3>}
               {showLineChart && <div style={{height:'280px'}}>
-                <AlertLineChart data={appTimeData} ymax={1000} ystep={100} Tname={'应用请求延迟'}/>
+                <AlertLineChart data={appTimeData} ymax={500} ystep={50} Tname={'应用请求延迟'}/>
               </div>}
             </div>
 
           </div>
           
           {/* 告警信息 */}
-          {showLineChart && <h3 style={{textAlign: 'center'}}>告警信息表</h3>}
+          {showLineChart && <h3 style={{textAlign: 'center'}}>告警信息</h3>}
           {showLineChart &&  
             <Table
                   rowKey={alertTableData=>alertTableData['id']}

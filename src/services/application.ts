@@ -62,6 +62,18 @@ export const getAlertTable = function (id?: string) {
     });
 };
 
+export const getHttpRequestTable = function (name?: string) {
+  return request(`api/n9e/query-app-http?app_name=${name}`, {
+    method: RequestMethod.Get,
+    params: {
+      name,
+    },
+  }).then((res) => {
+    console.log(`=========res:${res.dat}`)
+    return res.dat;
+  });
+};
+
 export const getEvents = function() {
   return request('api/n9e/alert-cur-events/list', {
     method: RequestMethod.Get,
