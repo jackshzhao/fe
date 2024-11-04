@@ -31,8 +31,6 @@ interface LineChartProps {
 }
 
 const LineChart: React.FC<LineChartProps> = ({ data }) => {
-  console.log("++++++++++++++++++++")
-  console.log(data)
   const getOption = () => {
     return {
       tooltip: {

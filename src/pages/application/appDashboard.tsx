@@ -134,10 +134,11 @@ const appDashboard: React.FC = () => {
     for (let i = 0; i < count; i++) {
       const currentTimestamp = startTimestamp + i * step;
       const date = new Date(currentTimestamp * 1000); // 将秒转换为毫秒
-  
-      const formattedDate = date.toISOString().replace('T', ' ').substring(0, 19);
+      const formattedDate = date.toLocaleString().replace(/\//g, "-");
       timeArray.push(formattedDate);
     }
+
+    console.log("timeArray = ", timeArray)
   
     return timeArray;
   }
