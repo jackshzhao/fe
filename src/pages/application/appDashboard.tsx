@@ -134,7 +134,7 @@ const appDashboard: React.FC = () => {
     for (let i = 0; i < count; i++) {
       const currentTimestamp = startTimestamp + i * step;
       const date = new Date(currentTimestamp * 1000); // 将秒转换为毫秒
-      const formattedDate = date.toLocaleString().replace(/\//g, "-");
+      const formattedDate = date.toLocaleString('chinese',{hour12:false}).replace(/\//g, "-");
       timeArray.push(formattedDate);
     }
 
@@ -276,7 +276,7 @@ const getStatusColor = (health: number): 'success' | 'normal' | 'exception' => {
       <div className="flex-col-item" >
         <div style={{ height: '50%', border: '1px solid #ccc',margin: '0px 10px 10px 0px' }}>
         
-          <h3 style={{textAlign: 'center'}}>应用连接数</h3>
+          <h3 style={{textAlign: 'center'}}>应用访问数</h3>
           <AppConnectNum data={appConnectData}/>                   
           {/* <BarChart data={topUsabilityApp}/>   */}
         </div>
