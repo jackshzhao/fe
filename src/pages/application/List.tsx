@@ -153,6 +153,7 @@ export default function List(props: IProps) {
           dashboardID = 7;
         }
         let  dashboardID2
+        let sign
         if (!record.tags || record.tags.length === 0) {
           return (
             <Link to={`/dashboard/${dashboardID}?ident=${text}&prom=1&gids=${gids}&title=${appTitle}&showHeader=false`}>
@@ -165,15 +166,21 @@ export default function List(props: IProps) {
             console.log(`item: ${typeof item}`);
       
             // 设置不同中间件的 dashboardID2
-            if (item.includes("Nginx")) {
+            if (item.includes("Nginx") || item.includes("nginx")) {
               dashboardID2 = 19;
-              console.log(`dashboardID2: ${dashboardID2}`);
-            } else if (item.includes("Tomcat")) {
+              sign = "中间件"
+            } else if (item.includes("Tomcat") || item.includes("tomcat")) {
               dashboardID2 = 15;
-            } else if (item.includes("Oracle")) {
+              sign = "中间件"
+            } else if (item.includes("Oracle") || item.includes("oracle")) {
               dashboardID2 = 16;
-            } else if (item.includes("MySQL")) {
+              sign = "数据库"
+            } else if (item.includes("MySQL") || item.includes("mysql") || item.includes("MySql")) {
               dashboardID2 = 21;
+              sign = "数据库"
+            }else if (item.includes("神通数据库")) {
+              dashboardID2 = 21;
+              sign = "数据库"
             }
       
             // 如果 tags 包含 "type"，返回 <Popconfirm>
@@ -185,7 +192,8 @@ export default function List(props: IProps) {
                     onConfirm={() => { history.push(`/dashboard/${dashboardID}?ident=${text}&prom=1&gids=${gids}&title=${appTitle}&showHeader=false`); }}
                     onCancel={() => { history.push(`/dashboard/${dashboardID2}?ident=${text}&prom=1&gids=${gids}&title=${appTitle}&showHeader=false`); }}
                     okText="主机"
-                    cancelText="中间件"
+                    cancelText = {sign}
+                    icon={null}
                   >
                     {text}
                   </Popconfirm>

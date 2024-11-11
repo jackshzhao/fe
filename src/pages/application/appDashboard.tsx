@@ -205,7 +205,7 @@ const getStatusColor = (health: number): 'success' | 'normal' | 'exception' => {
   <PageLayout  title={"应用大屏"}>
     <div className="flex-col-container">
       <div className="flex-col-item" >
-        <div style={{position: 'relative',  height: '50%',border: '1px solid #ccc',margin: '0px 10px 10px 0px',overflow:'auto',boxSizing:'border-box' }}>
+        <div style={{position: 'relative',  height: '50%',border: '1px solid #ccc',margin: '0px 10px 10px 0px',overflow:'scroll',overflowX:'hidden',boxSizing:'border-box' }}>
           <h3 style={{textAlign: 'center'}}>院级常用应用</h3>
           <div style={{height:'100%',width:'100%',position: 'absolute',top: '5%', left: '5%'}}>
             <Grid charts={importantApp} /> 
