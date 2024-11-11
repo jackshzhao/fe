@@ -452,6 +452,7 @@ const Application: React.FC = (props) => {
       }
       sethttpRequestTableData(res);
     });
+    
 
     //获取机器列表
     // getMonObjectList({gids:gids}).then((res) => {
@@ -645,11 +646,11 @@ const Application: React.FC = (props) => {
             <div style={{width:'50%'}}>
               {showLineChart && <h3 style={{textAlign: 'center', marginBottom: '1px'}}>应用请求延迟(ms)</h3>}
               {showLineChart && <div style={{height:'280px'}}>
-                <AlertLineChart data={appTimeData} ymax={500} ystep={50} Tname={'应用请求延迟'}/>
+                <AlertLineChart data={appTimeData} ymax={300} ystep={50} Tname={'应用请求延迟'}/>
               </div>}
             </div>
           </div>
-
+          <br />
           {/* Http请求信息 */}
           {/* {showLineChart && <h3 style={{textAlign: 'center'}}>应用请求信息</h3>} */}
           {showLineChart &&  

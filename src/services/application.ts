@@ -39,6 +39,15 @@ export const getAlertCountMetric = function (start?:number,end?:number,step?:num
     });
 };
 
+export const getAppConnection = function () {
+  return request(`/api/n9e/apps-connection`, {
+    method: RequestMethod.Get,
+    
+  }).then((res) => {
+    return res.dat;
+  });
+};
+
 export const getAppResponseTimeTendcy = function (names?:string,start?:number,end?:number,step?:number) {
   return request(`/api/n9e/proxy/1/api/v1/query_range?query=http_response_response_time{product="${names}"}&start=${start}&end=${end}&step=${step}`, {
     method: RequestMethod.Get,
@@ -69,7 +78,7 @@ export const getHttpRequestTable = function (name?: string) {
       name,
     },
   }).then((res) => {
-    console.log(`=========res:${res.dat}`)
+    // console.log(`=========res:${res.dat}`)
     return res.dat;
   });
 };

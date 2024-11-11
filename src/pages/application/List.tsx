@@ -188,7 +188,7 @@ export default function List(props: IProps) {
               return (
                 <span style={{ cursor: 'pointer', color: 'rgb(24, 144, 255)' }}>
                   <Popconfirm
-                    title="跳转主机大屏或者中间件大屏"
+                    title="查看仪表盘"
                     onConfirm={() => { history.push(`/dashboard/${dashboardID}?ident=${text}&prom=1&gids=${gids}&title=${appTitle}&showHeader=false`); }}
                     onCancel={() => { history.push(`/dashboard/${dashboardID2}?ident=${text}&prom=1&gids=${gids}&title=${appTitle}&showHeader=false`); }}
                     okText="主机"

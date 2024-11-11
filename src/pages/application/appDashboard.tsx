@@ -16,7 +16,7 @@ import 'antd/dist/antd.css';
 import './appDashboard.less'
 import { transform } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
-import {getAppHealth,getAlertCountMetric,getEvents} from '@/services/application'
+import {getAppHealth,getAlertCountMetric,getEvents,getAppConnection} from '@/services/application'
 import {formatTimesHour,formatTimeDay,getTimesRange, getTopUsability,formatYearTimesHour} from './utils'
 import { InfoCircleOutlined } from '@ant-design/icons';
 import { text } from 'd3';
@@ -29,6 +29,7 @@ const appDashboard: React.FC = () => {
   const [appList, setAppList] = useState<any[]>([]);
   const [appListTotal, setAppListTotal] = useState(0);
   const [appHealthData,setappHealthData] = useState([]);
+  const [appConnectionData,setappConnectionData] = useState([]);
   const [importantApp, setImportantApp] = useState([])
   const [topUsabilityApp, setTopUsabilityApp] = useState([])
   const [messages, setMessages] = useState([])
@@ -44,24 +45,21 @@ const appDashboard: React.FC = () => {
     {id:'1',name:'4',health_level:90},{id:'1',name:'5',health_level:90},{id:'1',name:'6',health_level:90},
     {id:'1',name:'4',health_level:90},{id:'1',name:'5',health_level:90},{id:'1',name:'6',health_level:90},
   ]
+  const [appConnectData, setAppConnectData] = useState<AppConnectDataType>({
+    time: [],
+    series: [],
+  });
 
-  const AppConnectData = {
-    time: ['2024-08-10 00:00', '2024-08-10 01:00', '2024-08-10 02:00', '2024-08-10 03:00', '2024-08-10 04:00'],
-    series: [
-      {
-        name: '应用A',
-        data: [120, 132, 101, 134, 90],
-      },
-      {
-        name: '应用B',
-        data: [220, 182, 191, 234, 290],
-      },
-      {
-        name: '应用C',
-        data: [150, 232, 201, 154, 190],
-      },
-    ],
-  };
+  interface SeriesData {
+    name: string;
+    data: number[];
+  }
+  
+  interface AppConnectDataType {
+    time: string[];
+    series: SeriesData[];
+  }
+
 
   //院级应用健康列表数据
   useEffect(() => {
@@ -110,8 +108,40 @@ const appDashboard: React.FC = () => {
       //console.log("setappHealthData:",res)
       setappHealthData(res); 
     });
+
+    //应用连接数统计
+    getAppConnection().then((res) => {
+      if(res === null || res.length == 0){
+        return
+      }
+
+      const timeArray = generateTimeArray(res[0].start_time, res[0].step_time, 60)
+      const seriesData = res.map(item => ({
+        name: item.name,
+        data: item.values,
+      }));
+      setAppConnectData({
+        time: timeArray,
+        series: seriesData,
+      });
+    });
         
   }, []);
+
+  function generateTimeArray(startTimestamp: number, step: number = 1440, count: number = 60): string[] {
+    const timeArray: string[] = []; // 显式指定 timeArray 为字符串数组
+  
+    for (let i = 0; i < count; i++) {
+      const currentTimestamp = startTimestamp + i * step;
+      const date = new Date(currentTimestamp * 1000); // 将秒转换为毫秒
+      const formattedDate = date.toLocaleString().replace(/\//g, "-");
+      timeArray.push(formattedDate);
+    }
+
+    console.log("timeArray = ", timeArray)
+  
+    return timeArray;
+  }
 
   const fetchData = async () => {
     try {
@@ -247,7 +277,7 @@ const getStatusColor = (health: number): 'success' | 'normal' | 'exception' => {
         <div style={{ height: '50%', border: '1px solid #ccc',margin: '0px 10px 10px 0px' }}>
         
           <h3 style={{textAlign: 'center'}}>应用连接数</h3>
-          <AppConnectNum data={AppConnectData}/>                   
+          <AppConnectNum data={appConnectData}/>                   
           {/* <BarChart data={topUsabilityApp}/>   */}
         </div>
         <div style={{ position: 'relative', height: '50%', border: '1px solid #ccc',margin: '0px 10px 0px 0px'}}>
