@@ -163,8 +163,7 @@ export default function List(props: IProps) {
         } else {
           // 遍历 tags，判断并根据包含的值显示不同的组件
           for (let item of record.tags) {
-            console.log(`item: ${typeof item}`);
-      
+          
             // 设置不同中间件的 dashboardID2
             if (item.includes("Nginx") || item.includes("nginx")) {
               dashboardID2 = 19;
@@ -179,7 +178,7 @@ export default function List(props: IProps) {
               dashboardID2 = 21;
               sign = "数据库"
             }else if (item.includes("神通数据库")) {
-              dashboardID2 = 21;
+              dashboardID2 = 30;
               sign = "数据库"
             }
       

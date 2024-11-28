@@ -156,22 +156,22 @@ const appDashboard: React.FC = () => {
     }
   };
 
-// const messages = [
-//   {id:'1',target_ident:'告警信息1',rule_name:'2024-8-26'},
-//   {id:'1',target_ident:'告警信息1',rule_name:'2024-8-26'},
-//   {id:'1',target_ident:'告警信息1',rule_name:'2024-8-26'},
-//   {id:'1',target_ident:'告警信息1',rule_name:'2024-8-26'},
-//   {id:'1',target_ident:'告警信息1',rule_name:'2024-8-26'},
-//   {id:'1',target_ident:'告警信息1',rule_name:'2024-8-26'},
-//   {id:'1',target_ident:'告警信息1',rule_name:'2024-8-26'},
-//   {id:'1',target_ident:'告警信息1',rule_name:'2024-8-26'},
-//   {id:'1',target_ident:'告警信息1',rule_name:'2024-8-26'},
-//   {id:'1',target_ident:'告警信息1',rule_name:'2024-8-26'},
-//   {id:'1',target_ident:'告警信息1',rule_name:'2024-8-26'},
-//   {id:'1',target_ident:'告警信息1',rule_name:'2024-8-26'},
-//   {id:'1',target_ident:'告警信息1',rule_name:'2024-8-26'},
-//   {id:'1',target_ident:'告警信息1',rule_name:'2024-8-26'},
-// ]
+const messagesTest = [
+  {id:'1',target_ident:'告警信息1',rule_name:'2024-8-26'},
+  {id:'1',target_ident:'告警信息2',rule_name:'2024-8-26'},
+  {id:'1',target_ident:'告警信息3',rule_name:'2024-8-26'},
+  {id:'1',target_ident:'告警信息4',rule_name:'2024-8-26'},
+  {id:'1',target_ident:'告警信息5',rule_name:'2024-8-26'},
+  {id:'1',target_ident:'告警信息6',rule_name:'2024-8-26'},
+  {id:'1',target_ident:'告警信息7',rule_name:'2024-8-26'},
+  {id:'1',target_ident:'告警信息8',rule_name:'2024-8-26'},
+  {id:'1',target_ident:'告警信息9',rule_name:'2024-8-26'},
+  {id:'1',target_ident:'告警信息10',rule_name:'2024-8-26'},
+  {id:'1',target_ident:'告警信息11',rule_name:'2024-8-26'},
+  {id:'1',target_ident:'告警信息12',rule_name:'2024-8-26'},
+  {id:'1',target_ident:'告警信息13',rule_name:'2024-8-26'},
+  {id:'1',target_ident:'告警信息14',rule_name:'2024-8-26'},
+]
   
  
 
@@ -246,7 +246,7 @@ const getStatusColor = (health: number): 'success' | 'normal' | 'exception' => {
           <h3 style={{textAlign: 'center'}}>应用告警信息</h3>
             {/* <AlertLineChart data={appHealthData} ystep={5} ymax={50} Tname={'健康应用'}/> */}
             {/* <RollInformation /> */}
-            <AlertMessage messages={messages}/>
+            <AlertMessage messages={messagesTest}/>
         </div>
       </div>
       <div className="flex-col-item">
