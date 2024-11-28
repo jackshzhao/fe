@@ -246,7 +246,7 @@ const getStatusColor = (health: number): 'success' | 'normal' | 'exception' => {
           <h3 style={{textAlign: 'center'}}>应用告警信息</h3>
             {/* <AlertLineChart data={appHealthData} ystep={5} ymax={50} Tname={'健康应用'}/> */}
             {/* <RollInformation /> */}
-            <AlertMessage messages={messagesTest}/>
+            <AlertMessage messages={messages}/>
         </div>
       </div>
       <div className="flex-col-item">
