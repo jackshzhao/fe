@@ -45,7 +45,7 @@ const LineChart: React.FC<LineChartProps> = ({ data }) => {
             // 获取日期部分，格式为 yy-dd
             const datePart = value.split(' ')[0];  // 获取日期部分 (yyyy-mm-dd)
             const [year, month, day] = datePart.split('-');  // 分割成年、月、日
-            return `${month}-${day}`;  // 只显示年份的后两位和日期部分
+            return `${month}-${day}`;  // 只显示日期月日部分
           }
         }
       },

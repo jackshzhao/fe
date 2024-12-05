@@ -171,6 +171,9 @@ export default function List(props: IProps) {
             } else if (item.includes("Tomcat") || item.includes("tomcat")) {
               dashboardID2 = 15;
               sign = "中间件"
+            }else if (item.includes("tongweb") || item.includes("Tongweb")) {
+              dashboardID2 = 29;
+              sign = "中间件"
             } else if (item.includes("Oracle") || item.includes("oracle")) {
               dashboardID2 = 16;
               sign = "数据库"
