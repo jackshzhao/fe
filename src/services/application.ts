@@ -99,7 +99,7 @@ export const setTopologyData = function (data: string) {
   });
 };
 
-export const getTopologyData = function (id?: number) {
+export const getTopologyData = function (id?: string) {
   return request(`/api/n9e/application/topology?app_id=${id}`, {
     method: RequestMethod.Get,
     params: {
