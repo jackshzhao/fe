@@ -38,6 +38,7 @@ export const getMenuList = (t) => {
           key: '/dashboards/1',
           label: t('设备视图'),
         },
+        
       ],
     },
     {
@@ -182,6 +183,10 @@ export const getMenuList = (t) => {
         {
           key: '/targets',
           label: t('主机管理'),
+        },
+        {
+          key: '/application-topology',
+          label: t('应用拓扑管理'),
         },
         {
           key: '/permissions',

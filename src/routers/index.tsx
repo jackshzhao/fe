@@ -50,6 +50,7 @@ import historyEvents from '@/pages/historyEvents';
 import Targets from '@/pages/targets';
 import Application from '@/pages/application';
 import APPDashboard from '@/pages/application/appDashboard';
+import ApplicationTopology from '@/pages/application/ApplicationTopology';
 import Demo from '@/pages/demo';
 import TaskTpl from '@/pages/taskTpl';
 import TaskTplAdd from '@/pages/taskTpl/add';
@@ -199,6 +200,7 @@ export default function Content() {
 
         <Route exact path='/applications' component={APPDashboard} />
         <Route exact path='/application-details' component={Application} />
+        <Route exact path='/application-topology' component={ApplicationTopology} />
 
         <Route exact path='/job-tpls' component={TaskTpl} />
         <Route exact path='/job-tpls/add' component={TaskTplAdd} />

@@ -92,6 +92,24 @@ export const getEvents = function() {
   });
 }
 
+export const setTopologyData = function (data: string) {
+  return request(`/api/n9e/application/topology`, {
+    method: RequestMethod.Post,
+    data,
+  });
+};
+
+export const getTopologyData = function (id?: number) {
+  return request(`/api/n9e/application/topology?app_id=${id}`, {
+    method: RequestMethod.Get,
+    params: {
+      id,
+    },
+  }).then((res) => {
+    return res.dat;
+  });
+};
+
 
 // export const getQueryRange = function (
 //     datasourceValue: number,

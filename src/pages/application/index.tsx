@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback, useContext } from 'react';
-import { Modal, Tag, Form, Input, Alert, Select, Tooltip,Table } from 'antd';
+import { Modal, Tag, Form, Input, Alert, Select, Tooltip,Table, Tabs } from 'antd';
 import { DatabaseOutlined, ArrowLeftOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import _, { debounce } from 'lodash';
@@ -12,6 +12,7 @@ import { CommonStateContext } from '@/App';
 import { useLocation } from 'react-router-dom';
 
 
+import AppTopologyView  from './ApplicationTopology/view'
 import AlertLineChart from './AlertLineChart';
 import {getAppHealthTendcy,getAppResponseTimeTendcy,getAlertTable, getHttpRequestTable} from '@/services/application';
 import List from './List';
@@ -49,6 +50,7 @@ const RED_COLOR = '#FF656B';
 const LOST_COLOR_LIGHT = '#CCCCCC';
 const LOST_COLOR_DARK = '#929090';
 
+const { TabPane } = Tabs;
 
 //使用 TextArea 组件来创建多行输入框，用rows来控住行数
 const {TextArea} = Input;
@@ -377,6 +379,7 @@ const Application: React.FC = (props) => {
   const [appTimeData,setAppTimeData] = useState([]);
   const [alertTableData,setalertTableData] = useState([]);
   const [httpRequestTableData,sethttpRequestTableData] = useState([]);
+  const [activeTabKey, setActiveTabKey] = useState('list'); // 默认显示“应用信息列表”
   //const [appTitle,setAppTitle] = useState('');
   
    
@@ -386,7 +389,14 @@ const Application: React.FC = (props) => {
   const gids:string = ids || '0';
   const names = queryParams.get('names') || '';
   const appTitle:string = names || ' '
-    
+ 
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search)
+    const key = queryParams.get('activeTabKey')
+    if (key) {
+      setActiveTabKey(key)
+    }
+  }, [location.search])
   
   const [timesrange_7d, setTimerange_7d] = useState<{ start: number, end: number }>({ start: 0, end: 0 });
 
@@ -575,7 +585,22 @@ const Application: React.FC = (props) => {
     },
   ];
   return (
-    <PageLayout showBack backPath='/applications' title={appTitle}>
+    <PageLayout 
+      showBack 
+      backPath='/applications' 
+      title={
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <span>{appTitle}</span>
+          <div style={{ marginLeft: 24 }}>
+            <Tabs activeKey={activeTabKey} onChange={setActiveTabKey}>
+              <TabPane tab="应用信息列表" key="list" />
+              <TabPane tab="应用拓扑结构" key="topology" />
+            </Tabs>
+          </div>
+        </div>
+      }
+    >
+
       <div className='object-manage-page-content'>
       {/* <BusinessGroup2
           showSelected={gids !== '0' && gids !== undefined}
@@ -616,62 +641,68 @@ const Application: React.FC = (props) => {
             setShowLineChart(true);
           }}
         /> */}
-        <div
-          className='table-area n9e-border-base'
-          style={{
-            height: '100%',
-            overflowY: 'auto',
-          }}
-        >
-          <List
-            gids={gids}
-            appTitle={appTitle}
-            selectedIdents={selectedIdents}
-            setSelectedIdents={setSelectedIdents}
-            selectedRowKeys={selectedRowKeys}
-            setSelectedRowKeys={setSelectedRowKeys}
-            refreshFlag={refreshFlag}
-            setRefreshFlag={setRefreshFlag}
-            setOperateType={setOperateType}
-          />
-
-          {/* 访问延迟 */}
-          <div style={{width:'100%',display:'flex'}}>
-            <div style={{width:'50%'}}>
-              {showLineChart && <h3 style={{textAlign: 'center', marginBottom: '1px'}}>应用健康趋势</h3>}
-              {showLineChart && <div style={{height:'280px'}}>
-                <AlertLineChart data={alertLineData} ymax={100} ystep={20} Tname={'应用健康度'}/>
-              </div>}
-            </div>
-            <div style={{width:'50%'}}>
-              {showLineChart && <h3 style={{textAlign: 'center', marginBottom: '1px'}}>应用请求延迟(ms)</h3>}
-              {showLineChart && <div style={{height:'280px'}}>
-                <AlertLineChart data={appTimeData} ymax={300} ystep={50} Tname={'应用请求延迟'}/>
-              </div>}
-            </div>
-          </div>
-          <br />
-          {/* Http请求信息 */}
-          {/* {showLineChart && <h3 style={{textAlign: 'center'}}>应用请求信息</h3>} */}
-          {showLineChart &&  
-            <Table
-                  rowKey={httpRequestTableData=>httpRequestTableData['id']}
-                  dataSource={httpRequestTableData}
-                  columns={appHttpRequestColumns}
-                  pagination={false} // Disable pagination for simplicity
+        {activeTabKey === 'list' ? (
+            <div
+            className='table-area n9e-border-base'
+            style={{
+              height: '100%',
+              overflowY: 'auto',
+            }}
+          >
+            <List
+              gids={gids}
+              appTitle={appTitle}
+              selectedIdents={selectedIdents}
+              setSelectedIdents={setSelectedIdents}
+              selectedRowKeys={selectedRowKeys}
+              setSelectedRowKeys={setSelectedRowKeys}
+              refreshFlag={refreshFlag}
+              setRefreshFlag={setRefreshFlag}
+              setOperateType={setOperateType}
             />
-          }
-          <br />
-          {/* 告警信息 */}
-          {showLineChart && <h3 style={{textAlign: 'center'}}>告警信息</h3>}
-          {showLineChart &&  
-            <Table
-                  rowKey={alertTableData=>alertTableData['id']}
-                  dataSource={alertTableData}
-                  columns={alertColumns}
-                  pagination={false} // Disable pagination for simplicity
-            />}
-        </div>
+  
+            {/* 访问延迟 */}
+            <div style={{width:'100%',display:'flex'}}>
+              <div style={{width:'50%'}}>
+                {showLineChart && <h3 style={{textAlign: 'center', marginBottom: '1px'}}>应用健康趋势</h3>}
+                {showLineChart && <div style={{height:'280px'}}>
+                  <AlertLineChart data={alertLineData} ymax={100} ystep={20} Tname={'应用健康度'}/>
+                </div>}
+              </div>
+              <div style={{width:'50%'}}>
+                {showLineChart && <h3 style={{textAlign: 'center', marginBottom: '1px'}}>应用请求延迟(ms)</h3>}
+                {showLineChart && <div style={{height:'280px'}}>
+                  <AlertLineChart data={appTimeData} ymax={300} ystep={50} Tname={'应用请求延迟'}/>
+                </div>}
+              </div>
+            </div>
+            <br />
+            {/* Http请求信息 */}
+            {/* {showLineChart && <h3 style={{textAlign: 'center'}}>应用请求信息</h3>} */}
+            {showLineChart &&  
+              <Table
+                    rowKey={httpRequestTableData=>httpRequestTableData['id']}
+                    dataSource={httpRequestTableData}
+                    columns={appHttpRequestColumns}
+                    pagination={false} // Disable pagination for simplicity
+              />
+            }
+            <br />
+            {/* 告警信息 */}
+            {showLineChart && <h3 style={{textAlign: 'center'}}>告警信息</h3>}
+            {showLineChart &&  
+              <Table
+                    rowKey={alertTableData=>alertTableData['id']}
+                    dataSource={alertTableData}
+                    columns={alertColumns}
+                    pagination={false} // Disable pagination for simplicity
+              />}
+          </div>
+          ) : (
+            <AppTopologyView appId={gids}/>
+          )
+        }
+        
       </div>
       <OperationModal
         operateType={operateType}
