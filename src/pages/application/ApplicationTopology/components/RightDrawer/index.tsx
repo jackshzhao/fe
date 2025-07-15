@@ -115,7 +115,7 @@ const RightDrawer: React.FC<Props> = ({ selectCell, close, appName, appID }) => 
       
           <Form.Item style={{ marginTop: '40px', textAlign: 'center' }}>
             <Button type="primary" htmlType="submit" className="login-form-button">
-              保存
+              确定
             </Button>
           </Form.Item>
         </Form>
