@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react'
+import type { Node } from '@antv/x6'
 import {message} from 'antd'
 import './index.less'
 import ToolBar from './components/ToolBar'
@@ -36,14 +37,24 @@ const Index = () => {
     setIsReady(true)
 
     g.on('selection:changed', (args) => {
-      args.added.forEach((cell: any) => {
-        const shape = cell.store.data.shape
-        if (shape !== 'edge') {
-          setSelectCell(cell)
-          setIsRightDrawer(true)
-        }
+      const selected = args.selected
+    
+      const firstNode = selected.find((cell): cell is Node => {
+        const shape = cell.getData()?.shape
+        return cell.isNode() && shape !== 'edge'
       })
+      
+      if (firstNode) {
+        setSelectCell((prev: Node | null) => {
+          return prev?.id !== firstNode.id ? firstNode : prev
+        })
+        setIsRightDrawer(true)
+      } else {
+        setIsRightDrawer(false)
+      }
     })
+    
+    
 
     g.on('blank:click', () => {
       setIsRightDrawer(false)

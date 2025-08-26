@@ -1,14 +1,16 @@
 import React, { useEffect, useRef } from 'react'
+import { useHistory  } from 'react-router-dom'
 import { Graph } from '@antv/x6'
 import { iconMap } from './Graph/topologyIcons'
 import { getPortGroups } from './Graph/shape'
 import { tippyMap } from './viewTippy'
 import tippy, { Instance } from 'tippy.js'
 import 'tippy.js/dist/tippy.css'
-import _ from 'lodash'
+import _, { toLower } from 'lodash'
 import { getMonObjectList } from '@/services/targets'
 import { getTopologyData } from '@/services/application' // 替换为你的接口方法
 import { convertStandardToTopologyData } from './util'
+import { message } from 'antd'
 
 type NodeIdentInfo = {
   id: string
@@ -21,17 +23,21 @@ type NodeIdentInfo = {
   state: string
   target_up: number
   arch: string
+  os: string
+  tags: string
 }
 
 interface IProps {
-  appId: string 
+  appId: string
+  appName: string 
 }
 
-const TopologyViewer: React.FC<IProps> = ({ appId }) => {
+const TopologyViewer: React.FC<IProps> = ({ appId,appName }) => {
   const containerRef = useRef<HTMLDivElement>(null)
   const graphRef = useRef<Graph | null>(null)
   const tippyInstancesRef = useRef<Instance[]>([])
   const isFirstLoadRef = useRef(true)
+  const history = useHistory()
 
   useEffect(() => {
     const initGraph = async () => {
@@ -65,21 +71,25 @@ const TopologyViewer: React.FC<IProps> = ({ appId }) => {
           const nodeId = node.attrs?.label?.nodeId
           const matched = list.find(item => String(item.id).trim() === String(nodeId).trim())
           const ident = matched?.ident ?? ''
+          const ip =matched?.host_ip ?? ''
           const health = matched?.health_level ?? 0
           const cpu_util = matched?.cpu_util ?? 0
+          const os = matched?.os ?? ''
           const mem_util = matched?.mem_util ?? 0
           const alert_num = matched?.alert_num
           const state = matched?.target_up === 0 ? '离线' : '在线'
           const arch = matched?.arch
-          const color = health >= 90 ? 'rgb(49,59,73)' : 'red'
+          const tags = matched?.tags
+          const color = health >= 90 ? 'rgb(49,59,73)' : health >= 70 ? 'yellow' : 'red'
 
           return {
             ...node,
             data: {
               ...node.data,
               shapeName: node.shape,
+              nodeId,
               ident,
-              ip: node.attrs?.label?.ip || '无IP',
+              ip,
               health,
               type: node.type,
               cpu_util,
@@ -87,6 +97,8 @@ const TopologyViewer: React.FC<IProps> = ({ appId }) => {
               alert_num,
               state,
               arch,
+              os,
+              tags,
             },
             shape: 'html',
             html: iconMap[node.shape || ''](color, 30),
@@ -103,6 +115,48 @@ const TopologyViewer: React.FC<IProps> = ({ appId }) => {
 
 
         graph.fromJSON({ ...topologyData, nodes: updatedNodes})
+
+        graph.on('node:click', ({ node }) => {
+          const data = node.getData()
+          if (!data) {
+            message.warn('请联系管理员配置节点信息')
+            return
+          }
+        
+          const ident = data.ident?.trim()
+          const gids = topologyData.group_id || ''
+          const title = appName 
+          let dashboardID = 6
+        
+          if(data.os === "windows"){
+            dashboardID = 7;
+          }
+          if (data.tags.some(tag => tag.toLowerCase().includes("nginx")))  {
+            dashboardID =19;
+          }
+          if(data.tags.some(tag => tag.toLowerCase().includes("tomcat")))  {
+            dashboardID =15;
+          }
+          if(data.tags.some(tag => tag.toLowerCase().includes("tongweb")))  {
+            dashboardID =29;
+          }
+          if(data.tags.some(tag => tag.toLowerCase().includes("oracle")))  {
+            dashboardID =16;
+          }
+          if(data.tags.some(tag => tag.toLowerCase().includes("mysql"))) {
+            dashboardID =21;
+          }
+          if(data.tags.some(tag => tag.includes("神通数据库")))  {
+            dashboardID =30;
+          }
+        
+          if (!data.nodeId) {
+            message.warn('节点缺少配置信息，无法跳转')
+            return
+          }
+          history.push(`/dashboard/${dashboardID}?ident=${ident}&prom=1&gids=${gids}&title=${title}&showHeader=false`)
+          
+        })
 
         // 缩放居中
         if (isFirstLoadRef.current) {
@@ -121,6 +175,7 @@ const TopologyViewer: React.FC<IProps> = ({ appId }) => {
           if (!view) return
 
           const { shapeName, ident, ip, type, health, cpu_util, mem_util, alert_num, state, arch } = cell.getData()
+          
           const tip = tippy(view.container, {
             content: tippyMap[shapeName](type, ident, ip, state, cpu_util, mem_util, alert_num, health, arch),
             allowHTML: true,

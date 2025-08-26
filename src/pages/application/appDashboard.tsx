@@ -284,7 +284,7 @@ const getStatusColor = (health: number): 'success' | 'normal' | 'exception' => {
           
           <h3 style={{textAlign: 'center'}}>告警总体趋势</h3>
           {/* <RoseChart data={appStatisticData}/> */}
-          <AlertLineChart data={appHealthData} ystep={2} ymax={20} Tname={'告警应用'}/>
+          <AlertLineChart data={appHealthData} ystep={10} ymax={100} Tname={'告警应用'}/>
         </div>
       </div>
     </div>

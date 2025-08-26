@@ -699,7 +699,7 @@ const Application: React.FC = (props) => {
               />}
           </div>
           ) : (
-            <AppTopologyView appId={gids}/>
+            <AppTopologyView appId={gids} appName={appTitle}/>
           )
         }
         

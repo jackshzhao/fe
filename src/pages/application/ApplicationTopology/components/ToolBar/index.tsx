@@ -5,7 +5,6 @@ import { Toolbar } from '@antv/x6-react-components'
 import FlowGraph from '../../Graph'
 import { getAppHealth,setTopologyData } from '@/services/application'
 import {converttopologyDatatoStandard} from '../../util'
-import { DataUri } from '@antv/x6'
 import {
   ClearOutlined,
   SaveOutlined,
