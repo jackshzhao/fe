@@ -131,23 +131,25 @@ const TopologyViewer: React.FC<IProps> = ({ appId,appName }) => {
           if(data.os === "windows"){
             dashboardID = 7;
           }
-          if (data.tags.some(tag => tag.toLowerCase().includes("nginx")))  {
-            dashboardID =19;
-          }
-          if(data.tags.some(tag => tag.toLowerCase().includes("tomcat")))  {
-            dashboardID =15;
-          }
-          if(data.tags.some(tag => tag.toLowerCase().includes("tongweb")))  {
-            dashboardID =29;
-          }
-          if(data.tags.some(tag => tag.toLowerCase().includes("oracle")))  {
-            dashboardID =16;
-          }
-          if(data.tags.some(tag => tag.toLowerCase().includes("mysql"))) {
-            dashboardID =21;
-          }
-          if(data.tags.some(tag => tag.includes("神通数据库")))  {
-            dashboardID =30;
+          if (data.tags || data.tags.length !== 0){
+            if (data.tags.some(tag => tag.toLowerCase().includes("nginx")))  {
+              dashboardID =19;
+            }
+            if(data.tags.some(tag => tag.toLowerCase().includes("tomcat")))  {
+              dashboardID =15;
+            }
+            if(data.tags.some(tag => tag.toLowerCase().includes("tongweb")))  {
+              dashboardID =29;
+            }
+            if(data.tags.some(tag => tag.toLowerCase().includes("oracle")))  {
+              dashboardID =16;
+            }
+            if(data.tags.some(tag => tag.toLowerCase().includes("mysql"))) {
+              dashboardID =21;
+            }
+            if(data.tags.some(tag => tag.includes("神通数据库")))  {
+              dashboardID =30;
+            }
           }
         
           if (!data.nodeId) {

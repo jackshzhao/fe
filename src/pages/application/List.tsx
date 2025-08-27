@@ -165,19 +165,19 @@ export default function List(props: IProps) {
           for (let item of record.tags) {
           
             // 设置不同中间件的 dashboardID2
-            if (item.includes("Nginx") || item.toLowerCase.includes("nginx")) {
+            if (item.includes("Nginx") || item.toLowerCase().includes("nginx")) {
               dashboardID2 = 19;
               sign = "中间件"
-            } else if (item.includes("Tomcat") || item.toLowerCase.includes("tomcat")) {
+            } else if (item.includes("Tomcat") || item.toLowerCase().includes("tomcat")) {
               dashboardID2 = 15;
               sign = "中间件"
-            }else if (item.toLowerCase.includes("tongweb") || item.includes("Tongweb")) {
+            }else if (item.toLowerCase().includes("tongweb") || item.includes("Tongweb")) {
               dashboardID2 = 29;
               sign = "中间件"
-            } else if (item.includes("Oracle") || item.toLowerCase.includes("oracle")) {
+            } else if (item.includes("Oracle") || item.toLowerCase().includes("oracle")) {
               dashboardID2 = 16;
               sign = "数据库"
-            } else if (item.includes("MySQL") || item.toLowerCase.includes("mysql") || item.includes("MySql")) {
+            } else if (item.includes("MySQL") || item.toLowerCase().includes("mysql") || item.includes("MySql")) {
               dashboardID2 = 21;
               sign = "数据库"
             }else if (item.includes("神通数据库")) {
