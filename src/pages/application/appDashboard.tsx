@@ -1,5 +1,6 @@
 import React ,{useState, useEffect}from 'react'
 import { Card, Row, Col, Statistic, Button,Progress, Space, Tooltip } from 'antd';
+import { SoundOutlined } from "@ant-design/icons";
 import { Layout,Table } from 'antd';
 import {Link} from 'react-router-dom';
 import BarChart from './BarChart';
@@ -32,7 +33,8 @@ const appDashboard: React.FC = () => {
   const [appConnectionData,setappConnectionData] = useState([]);
   const [importantApp, setImportantApp] = useState([])
   const [topUsabilityApp, setTopUsabilityApp] = useState([])
-  const [messages, setMessages] = useState([])
+  const [messages, setMessages] = useState<AlertMessage[]>([])
+  const [speakEnabled, setSpeakEnabled] = useState(false); // 是否已解锁播报权限
   const [timesrange_30d, setTimerange_30d] = useState<{ start: number, end: number }>({ start: 0, end: 0 });
   const [linkId,setLinkId] = useState(1);
   const [appStatisticData,setappStatisticData]=useState<[string, number][]>([
@@ -58,6 +60,13 @@ const appDashboard: React.FC = () => {
   interface AppConnectDataType {
     time: string[];
     series: SeriesData[];
+  }
+
+  interface AlertMessage {
+    id: string;
+    target_ident: string;
+    rule_name: string;
+    severity: number;
   }
 
 
@@ -127,6 +136,28 @@ const appDashboard: React.FC = () => {
     });
         
   }, []);
+
+  useEffect(() => {
+    messages.forEach((msg) => {
+      const prefix =
+        msg.severity === 1 ? "严重告警" :
+        msg.severity === 2 ? "重要告警" :
+        msg.severity === 3 ? "普通告警" :
+        "未知告警";
+      const text = prefix + " " + msg.rule_name;
+      speakText(text);
+    });
+  }, [messages, speakEnabled]); // 当 messages和speakEnabled 改变时重新加载
+
+  function speakText(text) {
+    if (!text) return;
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = "zh-CN"; // 中文语音
+    utterance.rate = 1;       // 语速 (0.1 ~ 10)
+    utterance.pitch = 1;      // 音调 (0 ~ 2)
+    speechSynthesis.speak(utterance);
+  }
+
 
   function generateTimeArray(startTimestamp: number, step: number = 1440, count: number = 60): string[] {
     const timeArray: string[] = []; // 显式指定 timeArray 为字符串数组
@@ -243,7 +274,19 @@ const getStatusColor = (health: number): 'success' | 'normal' | 'exception' => {
           
         </div>
         <div style={{ height: '50%', border: '1px solid #ccc' ,margin: '0px 10px 0px 0px',}}>
-          <h3 style={{textAlign: 'center'}}>应用告警信息</h3>
+          <h3 style={{textAlign: 'center'}}>应用告警信息
+            <SoundOutlined
+              onClick={() => {speakText("语音播报已开启"); setSpeakEnabled(true);}}  //大部分浏览器要求要用户手动点击一次才可解开语音限制，除非可在浏览器设置中修改
+              style={{
+                fontSize: "16px",
+                color: "#999", // 浅灰色
+                cursor: "pointer",
+                marginLeft: "8px"
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = "#1890ff")}
+              onMouseLeave={(e) => (e.currentTarget.style.color = "#999")}
+            />
+          </h3>
             {/* <AlertLineChart data={appHealthData} ystep={5} ymax={50} Tname={'健康应用'}/> */}
             {/* <RollInformation /> */}
             <AlertMessage messages={messages}/>
