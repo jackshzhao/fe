@@ -150,6 +150,21 @@ const TopologyViewer: React.FC<IProps> = ({ appId,appName }) => {
             if(data.tags.some(tag => tag.includes("神通数据库")))  {
               dashboardID =30;
             }
+            if (data.tags.some(tag => tag.includes("网关"))) {
+              dashboardID = 48;
+            }
+            if (data.tags.some(tag => tag.includes("天玥负载均衡"))) {
+              dashboardID = 49;
+            }
+            if (data.tags.some(tag => tag.includes("深信服负载均衡"))) {
+              dashboardID = 32;
+            }
+            if (data.tags.some(tag => tag.includes("华三交换机"))) {
+              dashboardID = 34;
+            }
+            if (data.tags.some(tag => tag.includes("华为存储"))) {
+              dashboardID = 51;
+            }
           }
         
           if (!data.nodeId) {

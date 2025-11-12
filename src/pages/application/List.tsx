@@ -180,9 +180,24 @@ export default function List(props: IProps) {
             } else if (item.includes("MySQL") || item.toLowerCase().includes("mysql") || item.includes("MySql")) {
               dashboardID2 = 21;
               sign = "数据库"
-            }else if (item.includes("神通数据库")) {
+            } else if (item.includes("神通数据库")) {
               dashboardID2 = 30;
               sign = "数据库"
+            } else if (item.includes("网关")) {
+              dashboardID2 = 48;
+              sign = "网关"
+            } else if (item.includes("天玥负载均衡")) {
+              dashboardID2 = 49;
+              sign = "负载均衡"
+            } else if (item.includes("深信服负载均衡")) {
+              dashboardID2 = 32;
+              sign = "负载均衡"
+            } else if (item.includes("华三交换机")) {
+              dashboardID2 = 34;
+              sign = "交换机"
+            } else if (item.includes("华为存储")) {
+              dashboardID2 = 51;
+              sign = "存储设备"
             }
       
             // 如果 tags 包含 "type"，返回 <Popconfirm>
@@ -190,7 +205,7 @@ export default function List(props: IProps) {
               return (
                 <span style={{ cursor: 'pointer', color: 'rgb(24, 144, 255)' }}>
                   <Popconfirm
-                    title="查看仪表盘"
+                    title="查看仪表盘2"
                     onConfirm={() => { history.push(`/dashboard/${dashboardID}?ident=${text}&prom=1&gids=${gids}&title=${appTitle}&showHeader=false`); }}
                     onCancel={() => { history.push(`/dashboard/${dashboardID2}?ident=${text}&prom=1&gids=${gids}&title=${appTitle}&showHeader=false`); }}
                     okText="主机"

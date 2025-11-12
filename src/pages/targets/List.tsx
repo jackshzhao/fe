@@ -70,7 +70,8 @@ const LOST_COLOR_DARK = '#929090';
 const downtimeOptions = [1, 2, 3, 5, 10, 30];
 const Unknown = () => {
   const { t } = useTranslation('targets');
-  return <Tooltip title={t('unknown_tip')}>unknown</Tooltip>;
+  // return <Tooltip title={t('unknown_tip')}>unknown</Tooltip>;
+  return <Tooltip title={t('unknown_tip')}></Tooltip>;
 };
 
 export default function List(props: IProps) {
