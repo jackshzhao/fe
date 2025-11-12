@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useHistory  } from 'react-router-dom'
 import { Graph } from '@antv/x6'
 import { iconMap } from './Graph/topologyIcons'
@@ -8,7 +8,7 @@ import tippy, { Instance } from 'tippy.js'
 import 'tippy.js/dist/tippy.css'
 import _, { toLower } from 'lodash'
 import { getMonObjectList } from '@/services/targets'
-import { getTopologyData } from '@/services/application' // 替换为你的接口方法
+import { getAppHealth, getTopologyData } from '@/services/application' 
 import { convertStandardToTopologyData } from './util'
 import { message } from 'antd'
 
@@ -38,6 +38,28 @@ const TopologyViewer: React.FC<IProps> = ({ appId,appName }) => {
   const tippyInstancesRef = useRef<Instance[]>([])
   const isFirstLoadRef = useRef(true)
   const history = useHistory()
+  const [switchID, setSwitchID] = useState<string>()
+  const [loadbalanceID, setLoadbalanceID] = useState<string>()
+  const [gatewayID, setGatewayID] = useState<string>()
+  const [routerID, setRouterID] = useState<string>()
+  const [storageID, setStorageID] = useState<string>()
+
+  useEffect(() => {
+    getAppHealth().then((res) => {
+      if (res && Array.isArray(res)) {
+        const switchGroup = res.find((item) => item.name .includes("交换机"))
+        setSwitchID(switchGroup?.id ?? '100000')
+        const loadbalanceGroup = res.find((item) => item.name .includes("负载均衡"))
+        setLoadbalanceID(loadbalanceGroup?.id ?? '100000')
+        const gatewayGroup = res.find((item) => item.name .includes("网关"))
+        setGatewayID(gatewayGroup?.id ?? '100000')
+        const routerGroup = res.find((item) => item.name .includes("路由器"))
+        setRouterID(routerGroup?.id ?? '100000')
+        const storageGroup = res.find((item) => item.name .includes("负载均衡"))
+        setStorageID(storageGroup?.id ?? '100000')
+      }
+    })
+  },[])
 
   useEffect(() => {
     const initGraph = async () => {
@@ -64,12 +86,53 @@ const TopologyViewer: React.FC<IProps> = ({ appId,appName }) => {
         }
 
         const topologyData = convertStandardToTopologyData(standardData)
-        const monData = await getMonObjectList({ gids: topologyData.group_id })
-        const list: NodeIdentInfo[] = monData.dat.list || []
+        // 定义三个分类的数据源
+      let machineList: NodeIdentInfo[] = []
+      let switchList: NodeIdentInfo[] = []
+      let loadbalanceList: NodeIdentInfo[] = []
+      let gatewayList: NodeIdentInfo[] = []
+      let routerList: NodeIdentInfo[] = []
+      let storageList: NodeIdentInfo[] = []
+      try {
+        const [machineRes, switchRes, loadbalanceRes, gatewayRes, routerRes, storageRes] = await Promise.all([
+          getMonObjectList({ gids: topologyData.group_id }),   // 普通节点
+          getMonObjectList({ gids: switchID }), // 交换机节点
+          getMonObjectList({ gids: loadbalanceID }), // 负载均衡节点
+          getMonObjectList({gids: gatewayID}),
+          getMonObjectList({gids: routerID}),
+          getMonObjectList({gids: storageID}),
+        ])
+        machineList = machineRes?.dat?.list || []
+        switchList = switchRes?.dat?.list || []
+        loadbalanceList = loadbalanceRes?.dat?.list || []
+        gatewayList = gatewayRes?.dat?.list || []
+        routerList = routerRes?.dat?.list || []
+        storageList = storageRes?.dat?.list || []
+      } catch (e) {
+        console.warn('部分应用分组数据加载失败', e)
+      }
+      const monData = await getMonObjectList({ gids: topologyData.group_id })
+      const list: NodeIdentInfo[] = monData.dat.list || []
 
-        const updatedNodes = topologyData.nodes.map((node: any) => {
-          const nodeId = node.attrs?.label?.nodeId
-          const matched = list.find(item => String(item.id).trim() === String(nodeId).trim())
+      //遍历节点
+      const updatedNodes = topologyData.nodes.map((node: any) => {
+        const nodeId = node.attrs?.label?.nodeId
+        const shape = node.shape || ''
+        let matched: NodeIdentInfo | undefined
+
+        if (shape.includes('switch')) {
+          matched = switchList.find((item) => String(item.id).trim() === String(nodeId).trim())
+        } else if (shape.includes('loadbalance')) {
+          matched = loadbalanceList.find((item) => String(item.id).trim() === String(nodeId).trim())
+        } else if(shape.includes('gateway')){
+          matched = gatewayList.find((item) => String(item.id).trim() === String(nodeId).trim())
+        }else if(shape.includes('router')){
+          matched = routerList.find((item) => String(item.id).trim() === String(nodeId).trim())
+        }else if(shape.includes('storage')){
+          matched = storageList.find((item) => String(item.id).trim() === String(nodeId).trim())
+        }else {
+          matched = machineList.find((item) => String(item.id).trim() === String(nodeId).trim())
+        }
           const ident = matched?.ident ?? ''
           const ip =matched?.host_ip ?? ''
           const health = matched?.health_level ?? 0

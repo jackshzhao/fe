@@ -195,11 +195,12 @@ export default class FlowGraph {
       createNode('custom-loadbalance', '负载均衡', 'rgb(49,59,73)'),
       createNode('custom-router', '路由器', 'rgb(49,59,73)'),
       createNode('custom-switch', '交换机', 'rgb(49,59,73)'),
-      createNode('custom-firewall', '防火墙', 'rgb(49,59,73)'),
+      //createNode('custom-firewall', '防火墙', 'rgb(49,59,73)'),
       createNode('custom-database', '数据库', 'rgb(49,59,73)'),
       createNode('custom-middleware', '中间件', 'rgb(49,59,73)'),
       createNode('custom-pc', '终端', 'rgb(49,59,73)'),
       createNode('custom-server', '服务器', 'rgb(49,59,73)'),
+      createNode('custom-storage','存储', 'rgb(49,59,73)'),
       // 更多节点 ...
     ];
      
@@ -341,6 +342,9 @@ export default class FlowGraph {
         break
       case '服务器':
         label = '服务器'
+        break
+      case '存储':
+        label = '存储'
         break
       case 'circle':
         label = '圆形节点'
