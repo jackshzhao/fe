@@ -139,6 +139,9 @@ const appDashboard: React.FC = () => {
 
   useEffect(() => {
     messages.forEach((msg) => {
+      if(msg.severity != 1) {  //目前只对严重告警发语音
+          return; 
+      }
       const prefix =
         msg.severity === 1 ? "严重告警" :
         msg.severity === 2 ? "重要告警" :
