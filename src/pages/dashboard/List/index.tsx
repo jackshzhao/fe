@@ -168,6 +168,10 @@ export default function index() {
                     },
                   },
                   {
+                    title: t('alias_name'),
+                    dataIndex: 'alias_name',
+                  },
+                  {
                     title: t('tags'),
                     dataIndex: 'tags',
                     className: 'tags-column',

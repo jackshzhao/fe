@@ -11,6 +11,7 @@ const zh_CN = {
   not_grouped: '未归组',
   host_ip: 'IP',
   tags: '标签',
+  target_type: '类型',
   group_obj: '业务组',
   target_up: '状态',
   mem_util: '内存',

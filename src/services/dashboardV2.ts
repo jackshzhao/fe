@@ -60,6 +60,7 @@ export const updateBoardPublic = function (id: number, data: any) {
 
 interface Dashboard {
   name: string;
+  alias_name?: string;
   ident?: string;
   tags: string;
   configs?: string;
@@ -111,8 +112,8 @@ export const getDashboard = function (id: string | number) {
   });
 };
 
-// 更新仪表盘 - 只能更新 name 和 tags
-export const updateDashboard = function (id: string | number, data: { name: string; ident?: string; tags: string }) {
+// 更新仪表盘 - 支持更新 name、alias_name、tags
+export const updateDashboard = function (id: string | number, data: { name: string; alias_name?: string; ident?: string; tags: string }) {
   return request(`/api/n9e/board/${id}`, {
     method: RequestMethod.Put,
     data,

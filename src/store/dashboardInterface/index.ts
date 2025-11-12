@@ -21,6 +21,7 @@ export interface Dashboard {
   favorite: number;
   id: number;
   name: string;
+  alias_name?: string;
   ident?: string;
   tags: string;
   update_at: number;

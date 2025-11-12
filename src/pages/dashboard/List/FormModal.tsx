@@ -45,6 +45,7 @@ function index(props: Props & ModalWrapProps) {
           console.warn(e);
         }
         form.setFieldsValue({
+          alias_name: res.alias_name,
           graphTooltip: configs.graphTooltip,
           graphZoom: configs.graphZoom,
         });
@@ -64,6 +65,7 @@ function index(props: Props & ModalWrapProps) {
           if (action === 'edit' && initialValues?.id) {
             result = await updateDashboard(initialValues.id, {
               name: values.name,
+              alias_name: values.alias_name,
               ident: values.ident,
               tags: _.join(values.tags, ' '),
             });
@@ -103,6 +105,7 @@ function index(props: Props & ModalWrapProps) {
         layout='vertical'
         initialValues={{
           name: initialValues?.name,
+          alias_name: initialValues?.alias_name,
           ident: initialValues?.ident,
           tags: initialValues?.tags ? _.split(initialValues.tags, ' ') : undefined,
           graphTooltip: _.get(initialValues, 'configs.graphTooltip', 'default'),
@@ -119,6 +122,14 @@ function index(props: Props & ModalWrapProps) {
           ]}
         >
           <Input />
+          
+        </Form.Item>
+        <Form.Item
+          label={t('alias_name')}
+          name='alias_name'
+        >
+          <Input />
+          
         </Form.Item>
         <Form.Item
           label={t('ident')}

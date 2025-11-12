@@ -1,6 +1,7 @@
 const zh_CN = {
   title: '监控仪表盘',
   name: '仪表盘名称',
+  alias_name: '仪表盘别称',
   tags: '分类标签',
   ident: '英文标识',
   ident_msg: '请输入英文字母、数字、中划线',
