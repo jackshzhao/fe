@@ -145,7 +145,7 @@ const TopologyViewer: React.FC<IProps> = ({ appId,appName }) => {
           const state = matched?.target_up === 0 ? '离线' : '在线'
           const arch = matched?.arch
           const tags = matched?.tags
-          const color = health >= 90 ? 'rgb(49,59,73)' : health >= 70 ? 'yellow' : 'red'
+          const color = health >= 90 ? '#52c41a' : health >= 70 ? '#FFE066' : 'red'
 
           return {
             ...node,
