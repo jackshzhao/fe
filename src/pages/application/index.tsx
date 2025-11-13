@@ -11,11 +11,10 @@ import {getMonObjectList, updateTargetWeight} from '@/services/targets'
 import { CommonStateContext } from '@/App';
 import { useLocation } from 'react-router-dom';
 
-
-import AppTopologyView  from './ApplicationTopology/view'
-import AlertLineChart from './AlertLineChart';
+import AppTopologyView from './ApplicationTopology/view'
+import AlertLineChart from './AlertLineChart'
 import {getAppHealthTendcy,getAppResponseTimeTendcy,getAlertTable, getHttpRequestTable} from '@/services/application';
-import List from './List';
+import List from './List'
 import {formatTimesHour, getTimesRange} from './utils'
 import BusinessGroup from './BusinessGroup';
 import BusinessGroup2, { getCleanBusinessGroupIds } from '@/components/BusinessGroup';
@@ -641,7 +640,7 @@ const Application: React.FC = (props) => {
             setShowLineChart(true);
           }}
         /> */}
-        {activeTabKey === 'list' ? (
+          {activeTabKey === 'list' ? (
             <div
             className='table-area n9e-border-base'
             style={{

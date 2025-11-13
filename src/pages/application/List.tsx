@@ -3,7 +3,7 @@ import { Table, Tag, Tooltip, Space, Input, Dropdown, Menu, Button, Modal, messa
 import {Link} from 'react-router-dom';
 import { ColumnsType } from 'antd/es/table';
 import { SearchOutlined, DownOutlined, ReloadOutlined, CopyOutlined, ApartmentOutlined, InfoCircleOutlined, EyeOutlined } from '@ant-design/icons';
-import { useAntdTable } from 'ahooks';
+import { useAntdTable, useUpdateEffect } from 'ahooks';
 import { useHistory } from 'react-router-dom';
 import _ from 'lodash';
 import moment from 'moment';
@@ -643,7 +643,7 @@ export default function List(props: IProps) {
     });
   }, [tableQueryContent, gids, downtime, agentVersions]);
 
-  useEffect(() => {
+  useUpdateEffect(() => {
     run({
       current: tableProps.pagination.current,
       pageSize: tableProps.pagination.pageSize,

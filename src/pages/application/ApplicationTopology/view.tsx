@@ -46,22 +46,24 @@ const TopologyViewer: React.FC<IProps> = ({ appId,appName }) => {
 
   useEffect(() => {
     getAppHealth().then((res) => {
+      console.log(res.map(i => i.name))
       if (res && Array.isArray(res)) {
-        const switchGroup = res.find((item) => item.name .includes("交换机"))
-        setSwitchID(switchGroup?.id ?? '100000')
-        const loadbalanceGroup = res.find((item) => item.name .includes("负载均衡"))
-        setLoadbalanceID(loadbalanceGroup?.id ?? '100000')
-        const gatewayGroup = res.find((item) => item.name .includes("网关"))
-        setGatewayID(gatewayGroup?.id ?? '100000')
-        const routerGroup = res.find((item) => item.name .includes("路由器"))
-        setRouterID(routerGroup?.id ?? '100000')
-        const storageGroup = res.find((item) => item.name .includes("负载均衡"))
-        setStorageID(storageGroup?.id ?? '100000')
+        const switchGroup = res.find((item) => item.name.includes("交换机"))
+        setSwitchID(switchGroup?.id ?? '0')
+        const loadbalanceGroup = res.find((item) => item.name.includes("负载均衡"))
+        setLoadbalanceID(loadbalanceGroup?.id ?? '0')
+        const gatewayGroup = res.find((item) => item.name.includes("网关"))
+        setGatewayID(gatewayGroup?.id ?? '0')
+        const routerGroup = res.find((item) => item.name.includes("路由器"))
+        setRouterID(routerGroup?.id ?? '0')
+        const storageGroup = res.find((item) => item.name.includes("存储"))
+        setStorageID(storageGroup?.id ?? '0')
       }
     })
   },[])
 
   useEffect(() => {
+    if (!switchID || !loadbalanceID || !gatewayID || !routerID || !storageID) return
     const initGraph = async () => {
       if (!containerRef.current) return
 
@@ -94,13 +96,14 @@ const TopologyViewer: React.FC<IProps> = ({ appId,appName }) => {
       let routerList: NodeIdentInfo[] = []
       let storageList: NodeIdentInfo[] = []
       try {
+        const fetchTargets = (gid?: string) => gid && gid !== '0' ? getMonObjectList({ gids: gid }) : Promise.resolve({ dat: { list: [] } })
         const [machineRes, switchRes, loadbalanceRes, gatewayRes, routerRes, storageRes] = await Promise.all([
-          getMonObjectList({ gids: topologyData.group_id }),   // 普通节点
-          getMonObjectList({ gids: switchID }), // 交换机节点
-          getMonObjectList({ gids: loadbalanceID }), // 负载均衡节点
-          getMonObjectList({gids: gatewayID}),
-          getMonObjectList({gids: routerID}),
-          getMonObjectList({gids: storageID}),
+          fetchTargets(topologyData.group_id),
+          fetchTargets(switchID),
+          fetchTargets(loadbalanceID),
+          fetchTargets(gatewayID),
+          fetchTargets(routerID),
+          fetchTargets(storageID),
         ])
         machineList = machineRes?.dat?.list || []
         switchList = switchRes?.dat?.list || []
@@ -111,8 +114,7 @@ const TopologyViewer: React.FC<IProps> = ({ appId,appName }) => {
       } catch (e) {
         console.warn('部分应用分组数据加载失败', e)
       }
-      const monData = await getMonObjectList({ gids: topologyData.group_id })
-      const list: NodeIdentInfo[] = monData.dat.list || []
+      
 
       //遍历节点
       const updatedNodes = topologyData.nodes.map((node: any) => {
@@ -283,7 +285,7 @@ const TopologyViewer: React.FC<IProps> = ({ appId,appName }) => {
       }
       tippyInstancesRef.current.forEach(ins => ins.destroy())
     }
-  }, [appId])
+  }, [appId, switchID, loadbalanceID, gatewayID, routerID, storageID])
 
   return (
     <div
