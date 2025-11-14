@@ -32,33 +32,74 @@ const Index = () => {
   const [isReady, setIsReady] = useState(false)
   const [isRightDrawer, setIsRightDrawer] = useState(false)
   const [selectCell, setSelectCell] = useState({})
+  const [appDatasFromBack, setAppDatasFromBack] = useState<AppInfo[]>([])
   const [switchID, setSwitchID] = useState<string>()
   const [loadbalanceID, setLoadbalanceID] = useState<string>()
   const [gatewayID, setGatewayID] = useState<string>()
   const [routerID, setRouterID] = useState<string>()
   const [storageID, setStorageID] = useState<string>()
+  const [identDatasFromBack, setIdentDatasFromBack] = useState<NodeIdentInfo[]>([])
+  const [switchDataFromBack, setSwitchDataFromBack] = useState<NodeIdentInfo[]>([]);
+  const [loadbalanceDataFromBack, setloadbalanceDataFromBack] = useState<NodeIdentInfo[]>([]);
+  const [gatewayDataFromBack, setGatewayDataFromBack] = useState<NodeIdentInfo[]>([]);
+  const [routerDataFromBack, setRouterDataFromBack] = useState<NodeIdentInfo[]>([]);
+  const [storageDataFromBack, setStorageDataFromBack] = useState<NodeIdentInfo[]>([]);
   const [appName, setAppName] = useState<string>('')
   const [appID, setAppID] = useState<string>()
   const graph = useRef<any>(null) // 全局访问 graph，可这样保存
 
   useEffect(() => {
-    getAppHealth().then((res) => {
-      if (res && Array.isArray(res)) {
-        const switchGroup = res.find((item) => item.name .includes("交换机"))
-        setSwitchID(switchGroup?.id ?? '100000')
-        const loadbalanceGroup = res.find((item) => item.name .includes("负载均衡"))
-        setLoadbalanceID(loadbalanceGroup?.id ?? '100000')
-        const gatewayGroup = res.find((item) => item.name .includes("网关"))
-        setGatewayID(gatewayGroup?.id ?? '100000')
-        const routerGroup = res.find((item) => item.name .includes("路由器"))
-        setRouterID(routerGroup?.id ?? '100000')
-        const storageGroup = res.find((item) => item.name .includes("存储"))
-        setStorageID(storageGroup?.id ?? '100000')
-      }
-    })
     const g = FlowGraph.init()
-    graph.current = g
-    setIsReady(true)
+    graph.current = g   
+
+    async function loadData() {
+      try {
+        // 1. 获取应用组信息
+        const res = await getAppHealth()
+        if (res && Array.isArray(res)) {
+          setAppDatasFromBack(res)
+  
+          const switchGroup = res.find((item) => item.name.includes("交换机"))
+          const loadbalanceGroup = res.find((item) => item.name.includes("负载均衡"))
+          const gatewayGroup = res.find((item) => item.name.includes("网关"))
+          const routerGroup = res.find((item) => item.name.includes("路由器"))
+          const storageGroup = res.find((item) => item.name.includes("存储"))
+  
+          const newSwitchID = switchGroup?.id ?? '100000'
+          const newLoadbalanceID = loadbalanceGroup?.id ?? '100000'
+          const newGatewayID = gatewayGroup?.id ?? '100000'
+          const newRouterID = routerGroup?.id ?? '100000'
+          const newStorageID = storageGroup?.id ?? '100000'
+  
+          setSwitchID(newSwitchID)
+          setLoadbalanceID(newLoadbalanceID)
+          setGatewayID(newGatewayID)
+          setRouterID(newRouterID)
+          setStorageID(newStorageID)
+  
+          // 2. 获取节点信息（在获取 ID 后再调用）
+          const [switchRes, loadbalanceRes, gatewayRes, routerRes, storageRes] = await Promise.all([
+            getMonObjectList({ gids: newSwitchID }),
+            getMonObjectList({ gids: newLoadbalanceID }),
+            getMonObjectList({ gids: newGatewayID }),
+            getMonObjectList({ gids: newRouterID }),
+            getMonObjectList({ gids: newStorageID }),
+          ])
+  
+          setSwitchDataFromBack(switchRes?.dat?.list || [])
+          setloadbalanceDataFromBack(loadbalanceRes?.dat?.list || [])
+          setGatewayDataFromBack(gatewayRes?.dat?.list || [])
+          setRouterDataFromBack(routerRes?.dat?.list || [])
+          setStorageDataFromBack(storageRes?.dat?.list || [])
+        }
+      }catch (err) {
+        console.error("初始化数据失败", err)
+        setAppDatasFromBack([])
+      } finally {
+        setIsReady(true)
+      }
+    }
+    loadData();
 
     g.on('selection:changed', (args) => {
       const selected = args.selected
@@ -76,8 +117,7 @@ const Index = () => {
       } else {
         setIsRightDrawer(false)
       }
-    })
-    
+    })  
     
 
     g.on('blank:click', () => {
@@ -124,31 +164,15 @@ const Index = () => {
       const topologyData = convertStandardToTopologyData(standardData)
       // 定义三个分类的数据源
       let machineList: NodeIdentInfo[] = []
-      let switchList: NodeIdentInfo[] = []
-      let loadbalanceList: NodeIdentInfo[] = []
-      let gatewayList: NodeIdentInfo[] = []
-      let routerList: NodeIdentInfo[] = []
-      let storageList: NodeIdentInfo[] = []
       try {
-        const [machineRes, switchRes, loadbalanceRes, gatewayRes, routerRes, storageRes] = await Promise.all([
+        const [machineRes] = await Promise.all([
           getMonObjectList({ gids: topologyData.group_id }),   // 普通节点
-          getMonObjectList({ gids: switchID }), // 交换机节点
-          getMonObjectList({ gids: loadbalanceID }), // 负载均衡节点
-          getMonObjectList({gids: gatewayID}),
-          getMonObjectList({gids: routerID}),
-          getMonObjectList({gids: storageID}),
         ])
         machineList = machineRes?.dat?.list || []
-        switchList = switchRes?.dat?.list || []
-        loadbalanceList = loadbalanceRes?.dat?.list || []
-        gatewayList = gatewayRes?.dat?.list || []
-        routerList = routerRes?.dat?.list || []
-        storageList = storageRes?.dat?.list || []
+        setIdentDatasFromBack(machineList)
       } catch (e) {
         console.warn('部分应用分组数据加载失败', e)
       }
-      const monData = await getMonObjectList({ gids: topologyData.group_id })
-      const list: NodeIdentInfo[] = monData.dat.list || []
 
       //遍历节点
       const updatedNodes = topologyData.nodes.map((node: any) => {
@@ -157,15 +181,15 @@ const Index = () => {
         let matched: NodeIdentInfo | undefined
 
         if (shape.includes('switch')) {
-          matched = switchList.find((item) => String(item.id).trim() === String(nodeId).trim())
+          matched = switchDataFromBack.find((item) => String(item.id).trim() === String(nodeId).trim())
         } else if (shape.includes('loadbalance')) {
-          matched = loadbalanceList.find((item) => String(item.id).trim() === String(nodeId).trim())
+          matched = loadbalanceDataFromBack.find((item) => String(item.id).trim() === String(nodeId).trim())
         } else if(shape.includes('gateway')){
-          matched = gatewayList.find((item) => String(item.id).trim() === String(nodeId).trim())
+          matched = gatewayDataFromBack.find((item) => String(item.id).trim() === String(nodeId).trim())
         }else if(shape.includes('router')){
-          matched = routerList.find((item) => String(item.id).trim() === String(nodeId).trim())
+          matched = routerDataFromBack.find((item) => String(item.id).trim() === String(nodeId).trim())
         }else if(shape.includes('storage')){
-          matched = storageList.find((item) => String(item.id).trim() === String(nodeId).trim())
+          matched = storageDataFromBack.find((item) => String(item.id).trim() === String(nodeId).trim())
         }else {
           matched = machineList.find((item) => String(item.id).trim() === String(nodeId).trim())
         }
@@ -231,6 +255,7 @@ const Index = () => {
         {isReady && (
           <ToolBar
             onAppChange={handleAppChange}
+            appDataFromBack={appDatasFromBack}
           />
         )}
       </div>
@@ -240,11 +265,12 @@ const Index = () => {
           close={closeRightDrawer}
           appName={appName}
           appID={appID}
-          switchID={switchID}
-          loadbalanceID={loadbalanceID}
-          gatewayID={gatewayID}
-          routerID={routerID}
-          storageID={storageID}
+          identDatasFromBack={identDatasFromBack}
+          switchDataFromBack={switchDataFromBack}
+          loadbalanceDataFromBack={loadbalanceDataFromBack}
+          gatewayDataFromBack={gatewayDataFromBack}
+          routerDataFromBack={routerDataFromBack}
+          storageDataFromBack={storageDataFromBack}
         />
       )}
       <div className="other">

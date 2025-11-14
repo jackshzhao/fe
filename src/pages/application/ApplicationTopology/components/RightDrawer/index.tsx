@@ -7,11 +7,12 @@ type Props = {
   close: () => void
   appName: string
   appID?: string
-  switchID?:string
-  loadbalanceID?:string
-  gatewayID?:string
-  routerID?:string
-  storageID?:string
+  identDatasFromBack?:NodeIdentInfo[]
+  switchDataFromBack?:NodeIdentInfo[]
+  loadbalanceDataFromBack?:NodeIdentInfo[]
+  gatewayDataFromBack?:NodeIdentInfo[]
+  routerDataFromBack?:NodeIdentInfo[]
+  storageDataFromBack?:NodeIdentInfo[]
 }
 
 type NodeIdentInfo = {
@@ -23,15 +24,7 @@ type NodeIdentInfo = {
 const { Option } = Select
 
 
-const RightDrawer: React.FC<Props> = ({ selectCell, close, appName, appID, switchID, loadbalanceID, gatewayID, routerID, storageID }) => {
-  const [identDatasFromBack, setIdentDatasFromBack] = useState<NodeIdentInfo[]>([])
-  const [switchDataFromBack, setSwitchDataFromBack] = useState<NodeIdentInfo[]>([]);
-  const [loadbalanceDataFromBack, setloadbalanceDataFromBack] = useState<NodeIdentInfo[]>([]);
-  const [gatewayDataFromBack, setGatewayDataFromBack] = useState<NodeIdentInfo[]>([]);
-  const [routerDataFromBack, setRouterDataFromBack] = useState<NodeIdentInfo[]>([]);
-  const [storageDataFromBack, setStorageDataFromBack] = useState<NodeIdentInfo[]>([]);
-  //const [nodeIdent, setNodeIdent] = useState<string>()  
-  //const [nodeHostIp, setNodeHostIp] = useState<string>()  
+const RightDrawer: React.FC<Props> = ({ selectCell, close, appName, appID, identDatasFromBack, switchDataFromBack, loadbalanceDataFromBack, gatewayDataFromBack, routerDataFromBack, storageDataFromBack }) => {
   const [form] = Form.useForm()
   const onFinish = (values: any) => {
     const { nodeName,nodeIdent,nodeIp,nodeId} = values
@@ -46,52 +39,22 @@ const RightDrawer: React.FC<Props> = ({ selectCell, close, appName, appID, switc
   const nodeId = selectCell.store.data.attrs.label.nodeId
   const nodeType = selectCell.shape //节点类型
   
-  useEffect(() => {
-    if (appName && appID !== undefined) {
-      console.log('App:', appName, 'ID:', appID, 'NodeType:', nodeType)
-      //获取机器列表
-      getMonObjectList({gids:appID}).then((res) => {
-        setIdentDatasFromBack(res.dat.list)
-      });
-      //获取交换机列表
-      getMonObjectList({gids:switchID}).then((res) => {
-        setSwitchDataFromBack(res.dat.list)
-      });
-      //获取负载均衡
-      getMonObjectList({gids:loadbalanceID}).then((res) => {
-        setloadbalanceDataFromBack(res.dat.list)
-      });
-      //获取网关
-      getMonObjectList({gids:gatewayID}).then((res) => {
-        setGatewayDataFromBack(res.dat.list)
-      });
-      //获取路由
-      getMonObjectList({gids:routerID}).then((res) => {
-        setRouterDataFromBack(res.dat.list)
-      });
-      //获取存储
-      getMonObjectList({gids:storageID}).then((res) => {
-        setStorageDataFromBack(res.dat.list)
-      });
-    
-    }
-  }, [appName, appID, selectCell])
 
   const handleIdentChange = (value: string | undefined) => {
     // 根据当前类型找到对应的数据源
     let sourceList: NodeIdentInfo[] = []
     if (nodeType.includes('switch')) {
-      sourceList = switchDataFromBack
+      sourceList = switchDataFromBack ?? []
     } else if (nodeType.includes('loadbalance')) {
-      sourceList = loadbalanceDataFromBack
+      sourceList = loadbalanceDataFromBack ?? []
     } else if (nodeType.includes('gateway')) {
-      sourceList = gatewayDataFromBack
+      sourceList = gatewayDataFromBack ?? []
     } else if (nodeType.includes('router')) {
-      sourceList = routerDataFromBack
+      sourceList = routerDataFromBack ?? []
     } else if (nodeType.includes('storage')) {
-      sourceList = storageDataFromBack
+      sourceList = storageDataFromBack ?? []
     } else {
-      sourceList = identDatasFromBack
+      sourceList = identDatasFromBack ?? []
     }
     //setNodeIdent(value)
     const selected = sourceList.find((item) => item.ident === value)
@@ -149,7 +112,7 @@ const RightDrawer: React.FC<Props> = ({ selectCell, close, appName, appID, switc
                 (option?.children?.toString() || '').toLowerCase().includes(input.toLowerCase())
               }
             >
-              {options.map((i) => (
+              {(options??[]).map((i) => (
                 <Option key={i.ident} value={i.ident}>
                   {i.ident}
                 </Option>

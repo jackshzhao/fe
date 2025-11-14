@@ -27,9 +27,10 @@ type AppInfo = {
 
 type Props = {
   onAppChange?: (name: string, id: string) => void
+  appDataFromBack?:AppInfo[]
 }
 
-const ToolBar: React.FC<Props> = ({ onAppChange }) => {
+const ToolBar: React.FC<Props> = ({ onAppChange, appDataFromBack }) => {
   const [canUndo, setCanUndo] = useState(false)
   const [canRedo, setCanRedo] = useState(false)
   const [zoom, setZoom] = useState(1)
@@ -55,12 +56,9 @@ const ToolBar: React.FC<Props> = ({ onAppChange }) => {
     graph.on('scale', () => {
       setZoom(graph.zoom())
     })
+    console.log("appdata:",appDataFromBack);
 
-    getAppHealth().then((res) => {
-      if (res && Array.isArray(res)) {
-        setAppDatasFromBack(res)
-      }
-    })
+    setAppDatasFromBack(appDataFromBack ?? [])
   }, [])
 
   const handleTopologyChange = (value: string | undefined) => {
